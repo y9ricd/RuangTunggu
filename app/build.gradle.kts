@@ -114,16 +114,16 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // ── Supabase Kotlin SDK ──────────────────────────────────────────────
-    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.4"))
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.1"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:auth-kt")
     implementation("io.github.jan-tennert.supabase:realtime-kt")
     implementation("io.github.jan-tennert.supabase:storage-kt")
 
     // Ktor engine for Supabase
-    implementation("io.ktor:ktor-client-android:3.1.1")
-    implementation("io.ktor:ktor-client-core:3.1.1")
-    implementation("io.ktor:ktor-utils:3.1.1")
+    implementation("io.ktor:ktor-client-android:3.0.3")
+    implementation("io.ktor:ktor-client-core:3.0.3")
+    implementation("io.ktor:ktor-utils:3.0.3")
 
     // ── Firebase ─────────────────────────────────────────────────────────
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
