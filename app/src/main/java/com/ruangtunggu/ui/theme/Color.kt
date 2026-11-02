@@ -70,3 +70,18 @@ val QueueActiveDark = Color(0xFF69F0AE)
 
 val QueueBadgeBgLight = Color(0xFFE8F5E9)
 val QueueBadgeBgDark = Color(0xFF1B5E20)
+
+// ── Figma Brand Tokens ─────────────────────────────────────────
+val RTBrandTeal = Color(0xFF0A8F82)
+val RTBrandTealDark = Color(0xFF0F766E)
+val RTBrandTealLight = Color(0xFF14B8A6)
+val RTBrandTealSurface = Color(0xFFE6F7F5)
+val RTBrandMint = Color(0xFFD1F4EC)
+val RTBrandNavy = Color(0xFF0F1E36)
+val RTBrandSlate = Color(0xFF64748B)
+val RTBrandMuted = Color(0xFF94A3B8)
+val RTBrandInputBg = Color(0xFFF8FAFC)
+val RTBrandBorder = Color(0xFFE2E8F0)
+val RTBrandGreenBadge = Color(0xFFDCFCE7)
+val RTBrandGreenText = Color(0xFF15803D)
+

@@ -13,6 +13,7 @@ import com.ruangtunggu.ui.screens.auth.LoginScreen
 import com.ruangtunggu.ui.screens.auth.RegisterScreen
 import com.ruangtunggu.ui.screens.home.HomeScreen
 import com.ruangtunggu.ui.screens.onboarding.OnboardingScreen
+import com.ruangtunggu.ui.screens.queue.QueueMonitorScreen
 import com.ruangtunggu.ui.screens.splash.SplashScreen
 
 /**
@@ -100,7 +101,7 @@ fun RuangTungguNavGraph(
         // ── Queue ──────────────────────────────────────────────
         composable<Routes.QueueMonitor> { backStackEntry ->
             val route = backStackEntry.toRoute<Routes.QueueMonitor>()
-            // TODO: QueueMonitorScreen(navController, registrationId = route.registrationId)
+            QueueMonitorScreen(navController = navController, registrationId = route.registrationId)
         }
 
         // ── History ────────────────────────────────────────────
