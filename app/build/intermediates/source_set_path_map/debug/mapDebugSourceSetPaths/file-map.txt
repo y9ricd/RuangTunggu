@@ -55,10 +55,10 @@ com.ruangtunggu.app-ui-tooling-data-release-53 C:\Users\farid\.gradle\caches\9.3
 com.ruangtunggu.app-browser-1.8.0-54 C:\Users\farid\.gradle\caches\9.3.0\transforms\f3ac32e465f0d5c9b0f35aa52d0699c5\workspace\transformed\browser-1.8.0\res
 com.ruangtunggu.app-coil-base-2.7.0-55 C:\Users\farid\.gradle\caches\9.3.0\transforms\f8c5bd61f2b1d673d27cdde1b820406a\workspace\transformed\coil-base-2.7.0\res
 com.ruangtunggu.app-lifecycle-viewmodel-ktx-2.8.7-56 C:\Users\farid\.gradle\caches\9.3.0\transforms\fe4bcfd2d7862de054b62d10d6be9189\workspace\transformed\lifecycle-viewmodel-ktx-2.8.7\res
-com.ruangtunggu.app-pngs-57 D:\SEMESTER 3\Pemograman Mobile\RT ke-6\RuangTunggu\app\build\generated\res\pngs\debug
-com.ruangtunggu.app-resValues-58 D:\SEMESTER 3\Pemograman Mobile\RT ke-6\RuangTunggu\app\build\generated\res\resValues\debug
-com.ruangtunggu.app-packageDebugResources-59 D:\SEMESTER 3\Pemograman Mobile\RT ke-6\RuangTunggu\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.ruangtunggu.app-packageDebugResources-60 D:\SEMESTER 3\Pemograman Mobile\RT ke-6\RuangTunggu\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.ruangtunggu.app-debug-61 D:\SEMESTER 3\Pemograman Mobile\RT ke-6\RuangTunggu\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.ruangtunggu.app-debug-62 D:\SEMESTER 3\Pemograman Mobile\RT ke-6\RuangTunggu\app\src\debug\res
-com.ruangtunggu.app-main-63 D:\SEMESTER 3\Pemograman Mobile\RT ke-6\RuangTunggu\app\src\main\res
+com.ruangtunggu.app-pngs-57 D:\SEMESTER 3\Pemograman Mobile\RuangTunggu\app\build\generated\res\pngs\debug
+com.ruangtunggu.app-resValues-58 D:\SEMESTER 3\Pemograman Mobile\RuangTunggu\app\build\generated\res\resValues\debug
+com.ruangtunggu.app-packageDebugResources-59 D:\SEMESTER 3\Pemograman Mobile\RuangTunggu\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.ruangtunggu.app-packageDebugResources-60 D:\SEMESTER 3\Pemograman Mobile\RuangTunggu\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.ruangtunggu.app-debug-61 D:\SEMESTER 3\Pemograman Mobile\RuangTunggu\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.ruangtunggu.app-debug-62 D:\SEMESTER 3\Pemograman Mobile\RuangTunggu\app\src\debug\res
+com.ruangtunggu.app-main-63 D:\SEMESTER 3\Pemograman Mobile\RuangTunggu\app\src\main\res
