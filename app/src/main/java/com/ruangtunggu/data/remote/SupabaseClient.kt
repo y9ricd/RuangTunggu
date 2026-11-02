@@ -16,7 +16,7 @@ object SupabaseClient {
     val client by lazy {
         createSupabaseClient(
             supabaseUrl = BuildConfig.SUPABASE_URL.ifBlank { "https://yqfoolhywaxntsmhvqsv.supabase.co" },
-            supabaseKey = BuildConfig.SUPABASE_ANON_KEY.ifBlank { "placeholder_anon_key" }
+            supabaseKey = BuildConfig.SUPABASE_ANON_KEY.ifBlank { "sb_publishable_Nomw6A4WtjKfLfdq5N4A1w_KAmoz5nL" }
         ) {
             install(Auth)
             install(Postgrest)
