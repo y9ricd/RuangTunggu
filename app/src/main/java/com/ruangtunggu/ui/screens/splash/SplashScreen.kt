@@ -159,7 +159,7 @@ fun SplashScreen(
             // Primary Button: Mulai
             Button(
                 onClick = {
-                    navController.navigate(Routes.Login) {
+                    navController.navigate(Routes.Onboarding) {
                         popUpTo(Routes.Splash) { inclusive = true }
                     }
                 },
