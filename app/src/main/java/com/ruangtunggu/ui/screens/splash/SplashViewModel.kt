@@ -1,48 +1,23 @@
 package com.ruangtunggu.ui.screens.splash
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.ruangtunggu.data.local.PreferenceManager
-import com.ruangtunggu.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-enum class SplashDestination {
-    LOADING,
-    ONBOARDING,
-    LOGIN,
-    HOME
-}
+data class SplashUiState(
+    val appTitle: String = "RuangTunggu",
+    val appSubtitle: String = "Antre tanpa ribet, sehat tanpa menunggu",
+    val heroHeading: String = "Antre dari mana saja",
+    val heroDescription: String = "Daftar, pantau, dan dapatkan notifikasi\ngiliran Anda langsung dari ponsel.",
+    val primaryButtonText: String = "Mulai",
+    val secondaryLinkText: String = "Sudah punya akun? Masuk"
+)
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(
-    private val preferenceManager: PreferenceManager,
-    private val authRepository: AuthRepository
-) : ViewModel() {
-
-    private val _destination = MutableStateFlow(SplashDestination.LOADING)
-    val destination: StateFlow<SplashDestination> = _destination.asStateFlow()
-
-    init {
-        checkStartRoute()
-    }
-
-    private fun checkStartRoute() {
-        viewModelScope.launch {
-            delay(1500) // Branding splash delay
-            if (!preferenceManager.isOnboardingCompleted) {
-                _destination.value = SplashDestination.ONBOARDING
-            } else if (authRepository.isLoggedIn()) {
-                _destination.value = SplashDestination.HOME
-            } else {
-                _destination.value = SplashDestination.LOGIN
-            }
-        }
-    }
+class SplashViewModel @Inject constructor() : ViewModel() {
+    private val _uiState = MutableStateFlow(SplashUiState())
+    val uiState: StateFlow<SplashUiState> = _uiState.asStateFlow()
 }
-

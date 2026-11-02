@@ -2,68 +2,79 @@ package com.ruangtunggu.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 val RuangTungguTypography = Typography(
-    displaySmall = TextStyle(
-        fontSize = 24.sp,
-        fontWeight = FontWeight.SemiBold,
-        lineHeight = 32.sp,
-        letterSpacing = 0.sp
+    displayLarge = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 36.sp,
+        lineHeight = 42.sp,
+        color = RTColors.BrandPrimaryTeal
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Bold,
+        fontSize = 26.sp,
+        letterSpacing = 1.6.sp,
+        color = RTColors.PureWhite
     ),
     headlineMedium = TextStyle(
-        fontSize = 20.sp,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Bold,
+        fontSize = 22.sp,
         lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        color = RTColors.NavyHeading
     ),
     titleLarge = TextStyle(
-        fontSize = 18.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
         lineHeight = 26.sp,
-        letterSpacing = 0.sp
+        color = RTColors.NavyHeading
     ),
     titleMedium = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
-        fontWeight = FontWeight.SemiBold,
-        lineHeight = 24.sp,
-        letterSpacing = 0.15.sp
+        lineHeight = 22.sp,
+        color = RTColors.NavyHeading
     ),
     bodyLarge = TextStyle(
-        fontSize = 16.sp,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        color = RTColors.NavyHeading
     ),
     bodyMedium = TextStyle(
-        fontSize = 14.sp,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
-        lineHeight = 20.sp,
-        letterSpacing = 0.25.sp
-    ),
-    bodySmall = TextStyle(
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Normal,
-        lineHeight = 16.sp,
-        letterSpacing = 0.4.sp
+        fontSize = 13.5.sp,
+        lineHeight = 22.sp,
+        color = RTColors.SlateBodyText
     ),
     labelLarge = TextStyle(
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Medium,
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp
+        color = RTColors.PureWhite
     ),
     labelMedium = TextStyle(
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Medium,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 13.sp,
+        lineHeight = 18.sp,
+        color = RTColors.NavyHeading
     ),
     labelSmall = TextStyle(
-        fontSize = 10.sp,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Medium,
-        lineHeight = 14.sp,
-        letterSpacing = 0.5.sp
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        color = RTColors.MutedSlate
     )
 )

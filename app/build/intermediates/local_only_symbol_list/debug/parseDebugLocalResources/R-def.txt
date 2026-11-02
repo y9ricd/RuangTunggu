@@ -1,0 +1,12 @@
+R_DEF: Internal format may change without notice
+local
+drawable ic_launcher_background
+drawable ic_launcher_foreground_img
+drawable img_rs_harapan_bunda
+drawable img_rs_medika
+drawable img_rs_sehat_sidoarjo
+drawable logo_ruangtunggu
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Theme.RuangTunggu

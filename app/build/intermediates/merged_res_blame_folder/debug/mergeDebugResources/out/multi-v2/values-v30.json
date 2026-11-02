@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.ruangtunggu.app-mergeDebugResources-59:/values-v30/values-v30.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\farid\\.gradle\\caches\\9.3.0\\transforms\\5442c0283c630700d5b4abc357774c6b\\workspace\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "72",
+                        "endOffsets": "123"
+                    }
+                }
+            ]
+        }
+    ]
+}

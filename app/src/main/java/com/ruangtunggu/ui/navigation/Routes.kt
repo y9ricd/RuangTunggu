@@ -2,41 +2,79 @@ package com.ruangtunggu.ui.navigation
 
 import kotlinx.serialization.Serializable
 
-/**
- * Type-safe route definitions for the RuangTunggu app.
- */
-sealed interface Routes {
+@Serializable
+object SplashRoute
 
-    // ── Auth Flow ──────────────────────────────────────────────
-    @Serializable data object Splash : Routes
-    @Serializable data object Onboarding : Routes
-    @Serializable data object Login : Routes
-    @Serializable data object Register : Routes
-    @Serializable data object ForgotPassword : Routes
-    @Serializable data class VerifyOtp(val email: String) : Routes
-    @Serializable data object ResetPassword : Routes
+@Serializable
+object LoginRoute
 
-    // ── Main / Home Flow ───────────────────────────────────────
-    @Serializable data object Home : Routes
-    @Serializable data class Search(val query: String = "") : Routes
-    @Serializable data class PoliDetail(val hospitalId: String) : Routes
-    @Serializable data class DoctorList(val poliId: String) : Routes
-    @Serializable data class SelectSchedule(val doctorId: String) : Routes
-    @Serializable data class ConfirmRegistration(val scheduleId: String) : Routes
-    @Serializable data object RegistrationSuccess : Routes
+@Serializable
+object RegisterRoute
 
-    // ── Queue ──────────────────────────────────────────────────
-    @Serializable data class QueueMonitor(val registrationId: String) : Routes
+@Serializable
+object ForgotPasswordRoute
 
-    // ── History ────────────────────────────────────────────────
-    @Serializable data object History : Routes
+@Serializable
+data class BerandaRoute(
+    val initialTab: String = "BERANDA"
+)
 
-    // ── Notifications ──────────────────────────────────────────
-    @Serializable data object Notifications : Routes
-    @Serializable data class NotificationDetail(val notificationId: String) : Routes
+@Serializable
+data class CariRsPoliRoute(
+    val initialPoliFilter: String = "Semua"
+)
 
-    // ── Profile ────────────────────────────────────────────────
-    @Serializable data object Profile : Routes
-    @Serializable data object EditProfile : Routes
-    @Serializable data object About : Routes
-}
+@Serializable
+data class PilihPoliRoute(
+    val hospitalId: String = "rs-sehat-sidoarjo",
+    val hospitalName: String = "RS Sehat Sidoarjo"
+)
+
+@Serializable
+data class PilihDokterJadwalRoute(
+    val hospitalId: String = "rs-sehat-sidoarjo",
+    val hospitalName: String = "RS Sehat Sidoarjo",
+    val poliId: String = "poli-anak",
+    val poliName: String = "Poli Anak",
+    val poliShortName: String = "Anak"
+)
+
+@Serializable
+data class KonfirmasiPendaftaranRoute(
+    val hospitalId: String = "rs-sehat-sidoarjo",
+    val hospitalName: String = "RS Sehat Sidoarjo",
+    val poliId: String = "poli-anak",
+    val poliName: String = "Poli Anak",
+    val poliShortName: String = "Anak",
+    val doctorId: String = "doc-abdul",
+    val doctorName: String = "dr. Abdul, Sp.A",
+    val dateLabel: String = "Kam, 22 Okt",
+    val slotTime: String = "08:00"
+)
+
+@Serializable
+object PendaftaranBerhasilRoute
+
+@Serializable
+object TiketQrRoute
+
+@Serializable
+object DatangKeLoketRoute
+
+@Serializable
+object ChatPetugasRoute
+
+@Serializable
+object NotifikasiRoute
+
+@Serializable
+object AturPengingatRoute
+
+@Serializable
+object BeriPenilaianRoute
+
+@Serializable
+object RescheduleJadwalRoute
+
+@Serializable
+object UbahProfilRoute

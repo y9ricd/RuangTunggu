@@ -1,0 +1,1 @@
+-keep,allowobfuscation,allowshrinking class com.ruangtunggu.ui.screens.booking.PilihDokterJadwalViewModel

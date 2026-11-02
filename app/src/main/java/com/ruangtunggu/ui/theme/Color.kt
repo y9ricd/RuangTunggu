@@ -1,87 +1,64 @@
 package com.ruangtunggu.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
-// ── Light Palette ──────────────────────────────────────────────
-val PrimaryLight = Color(0xFF00897B)
-val OnPrimaryLight = Color(0xFFFFFFFF)
-val PrimaryContainerLight = Color(0xFFB2DFDB)
-val OnPrimaryContainerLight = Color(0xFF00251E)
+/**
+ * Official Figma Design System Tokens for RuangTunggu.
+ * Exact hex values matched 1:1 with Figma specification:
+ * - #0A8F82 (Brand Primary Teal)
+ * - #0F766E (Brand Dark Teal)
+ * - #14B8A6 (Brand Light Teal / Mint)
+ * - #0F1E36 (Navy Text / Headings)
+ * - #F8FAFC (Input Field & Screen Background)
+ * - #E2E8F0 (Input Field Border & Progress Track)
+ */
+object RTColors {
+    val BrandPrimaryTeal = Color(0xFF0A8F82)      // #0A8F82 - Warna identitas utama
+    val BrandDarkTeal = Color(0xFF0F766E)         // #0F766E - Aksen gradien atas
+    val BrandMidTeal = Color(0xFF0D9488)          // #0D9488 - Transisi gradien tengah
+    val BrandLightTeal = Color(0xFF14B8A6)        // #14B8A6 - Aksen dinamis bawah
+    val NavyHeading = Color(0xFF0F1E36)           // #0F1E36 - Teks kontras tinggi / Headings
+    val InputBackground = Color(0xFFF8FAFC)       // #F8FAFC - Input Field Background
+    val InputBorder = Color(0xFFE2E8F0)           // #E2E8F0 - Input Field Border 1dp solid
 
-val SecondaryLight = Color(0xFF00ACC1)
-val OnSecondaryLight = Color(0xFFFFFFFF)
-val SecondaryContainerLight = Color(0xFFB2EBF2)
-val OnSecondaryContainerLight = Color(0xFF001F24)
+    val MintSurfaceActive = Color(0xFFD1F4EC)     // #D1F4EC - Indikator kapsul aktif & Layanan
+    val PastelTealCircle = Color(0xFFE0F7F4)      // #E0F7F4 - Lingkaran Empty State & Layanan seragam
+    val PastelSlateCircle = Color(0xFFF1F5F9)     // #F1F5F9 - Lingkaran sekunder
+    val SlateBodyText = Color(0xFF64748B)         // #64748B - Keterangan / sub-teks
+    val MutedSlate = Color(0xFF94A3B8)            // #94A3B8 - Placeholder & icon non-aktif
+    val ScreenBackground = Color(0xFFF8FAFC)      // #F8FAFC
+    val PureWhite = Color(0xFFFFFFFF)             // #FFFFFF - Floating Card Surface
+    val AvatarTeal = Color(0xFF38B2A5)            // #38B2A5 - Avatar lingkaran "NP"
 
-val TertiaryLight = Color(0xFF5C6BC0)
-val OnTertiaryLight = Color(0xFFFFFFFF)
+    val ActiveBadgeBg = Color(0xFFDCFCE7)         // #DCFCE7 - Badge "● Antrean aktif"
+    val ActiveBadgeDot = Color(0xFF16A34A)        // #16A34A - Titik hijau status aktif
+    val ActiveBadgeText = Color(0xFF15803D)       // #15803D - Teks hijau status aktif
+    val WarningAmberBg = Color(0xFFFEF3C7)        // #FEF3C7 - Fase 2 (Dekat) & Fase 4 (Dijeda)
+    val WarningAmberBorder = Color(0xFFF59E0B)    // #F59E0B - Border peringatan dekat/dijeda
+    val WarningAmberText = Color(0xFFB45309)      // #B45309 - Teks peringatan dekat/dijeda
+    val PausedBadgeBg = Color(0xFFFEF3C7)         // #FEF3C7 - Badge "Dijeda"
+    val PausedAmber = Color(0xFFD97706)           // #D97706 - Status antrean dijeda
+    val ErrorRed = Color(0xFFDC2626)              // #DC2626 - Error border & tombol batalkan
+    val ErrorSurface = Color(0xFFFEF2F2)          // #FEF2F2 - Error banner & slot penuh surface
+    val NotificationRedDot = Color(0xFFEF4444)    // #EF4444 - Red dot lonceng notifikasi
+    val StarGold = Color(0xFFF59E0B)              // #F59E0B - Bintang penilaian layanan
 
-val BackgroundLight = Color(0xFFFFFFFF)
-val OnBackgroundLight = Color(0xFF212121)
+    // Consistent Quick Action Pastel Surfaces (Section "Layanan" - 100% Uniform Brand Mint)
+    val QuickActionUniformBg = Color(0xFFE0F7F4)  // #E0F7F4 - Seragam untuk Cari RS, Jadwal, Riwayat, Profil
+    val QuickActionCariRsBg = Color(0xFFE0F7F4)
+    val QuickActionJadwalBg = Color(0xFFE0F7F4)
+    val QuickActionRiwayatBg = Color(0xFFE0F7F4)
+    val QuickActionProfilBg = Color(0xFFE0F7F4)
 
-val SurfaceLight = Color(0xFFF5F5F5)
-val OnSurfaceLight = Color(0xFF212121)
-val SurfaceVariantLight = Color(0xFFE0E0E0)
-val OnSurfaceVariantLight = Color(0xFF424242)
+    val CardSpotShadow = Color(0x1F000000)
+    val CardAmbientShadow = Color(0x10000000)
 
-val ErrorLight = Color(0xFFD32F2F)
-val OnErrorLight = Color(0xFFFFFFFF)
-
-val OutlineLight = Color(0xFFBDBDBD)
-val OutlineVariantLight = Color(0xFFE0E0E0)
-
-// ── Dark Palette ───────────────────────────────────────────────
-val PrimaryDark = Color(0xFF4DB6AC)
-val OnPrimaryDark = Color(0xFF000000)
-val PrimaryContainerDark = Color(0xFF004D40)
-val OnPrimaryContainerDark = Color(0xFFB2DFDB)
-
-val SecondaryDark = Color(0xFF4DD0E1)
-val OnSecondaryDark = Color(0xFF000000)
-val SecondaryContainerDark = Color(0xFF00363D)
-val OnSecondaryContainerDark = Color(0xFFB2EBF2)
-
-val TertiaryDark = Color(0xFF9FA8DA)
-val OnTertiaryDark = Color(0xFF000000)
-
-val BackgroundDark = Color(0xFF121212)
-val OnBackgroundDark = Color(0xFFE0E0E0)
-
-val SurfaceDark = Color(0xFF1E1E1E)
-val OnSurfaceDark = Color(0xFFE0E0E0)
-val SurfaceVariantDark = Color(0xFF2C2C2C)
-val OnSurfaceVariantDark = Color(0xFFBDBDBD)
-
-val ErrorDark = Color(0xFFEF9A9A)
-val OnErrorDark = Color(0xFF000000)
-
-val OutlineDark = Color(0xFF616161)
-val OutlineVariantDark = Color(0xFF424242)
-
-// ── Custom Colors (exposed via CompositionLocal) ───────────────
-val SuccessLight = Color(0xFF388E3C)
-val SuccessDark = Color(0xFF81C784)
-
-val WarningLight = Color(0xFFF57C00)
-val WarningDark = Color(0xFFFFB74D)
-
-val QueueActiveLight = Color(0xFF00C853)
-val QueueActiveDark = Color(0xFF69F0AE)
-
-val QueueBadgeBgLight = Color(0xFFE8F5E9)
-val QueueBadgeBgDark = Color(0xFF1B5E20)
-
-// ── Figma Brand Tokens ─────────────────────────────────────────
-val RTBrandTeal = Color(0xFF0A8F82)
-val RTBrandTealDark = Color(0xFF0F766E)
-val RTBrandTealLight = Color(0xFF14B8A6)
-val RTBrandTealSurface = Color(0xFFE6F7F5)
-val RTBrandMint = Color(0xFFD1F4EC)
-val RTBrandNavy = Color(0xFF0F1E36)
-val RTBrandSlate = Color(0xFF64748B)
-val RTBrandMuted = Color(0xFF94A3B8)
-val RTBrandInputBg = Color(0xFFF8FAFC)
-val RTBrandBorder = Color(0xFFE2E8F0)
-val RTBrandGreenBadge = Color(0xFFDCFCE7)
-val RTBrandGreenText = Color(0xFF15803D)
-
+    val HeaderWaveGradient = Brush.verticalGradient(
+        colors = listOf(
+            BrandDarkTeal,
+            BrandMidTeal,
+            BrandLightTeal
+        )
+    )
+}
