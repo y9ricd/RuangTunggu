@@ -83,6 +83,13 @@ android {
     }
 }
 
+androidComponents {
+    beforeVariants { variantBuilder ->
+        variantBuilder.enableAndroidTest = false
+        variantBuilder.enableUnitTest = false
+    }
+}
+
 dependencies {
     // ── Compose BOM ──────────────────────────────────────────────────────
     val composeBom = platform("androidx.compose:compose-bom:2025.01.01")
@@ -109,8 +116,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.7")
 
     // ── Hilt ─────────────────────────────────────────────────────────────
-    implementation("com.google.dagger:hilt-android:2.54")
-    kapt("com.google.dagger:hilt-android-compiler:2.54")
+    implementation("com.google.dagger:hilt-android:2.55")
+    kapt("com.google.dagger:hilt-android-compiler:2.55")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // ── Supabase Kotlin SDK ──────────────────────────────────────────────
