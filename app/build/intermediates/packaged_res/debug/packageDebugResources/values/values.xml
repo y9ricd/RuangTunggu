@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">RuangTunggu</string>
     <style name="Theme.RuangTunggu" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
         <item name="android:statusBarColor">#0F766E</item>
         <item name="android:navigationBarColor">#FFFFFF</item>
     </style>
