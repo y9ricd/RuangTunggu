@@ -182,3 +182,4 @@ INSERT INTO notifications (user_id, title, message, time_ago, is_important, is_r
 ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Giliran Anda sudah dekat!', 'Sisa 2 antrean. Segera menuju Poli Anak RS Sehat Sidoarjo.', 'Baru saja', TRUE, FALSE),
 ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Pendaftaran Berhasil', 'Pendaftaran antrean A-023 di RS Sehat Sidoarjo berhasil dikonfirmasi.', '1 jam lalu', FALSE, TRUE),
 ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Pemeriksaan Selesai', 'Kunjungan Anda pada tanggal 12 Okt telah selesai. Berikan ulasan dokter.', '2 hari lalu', FALSE, TRUE);
+

@@ -235,3 +235,4 @@ private fun TicketRow(label: String, value: String) {
         )
     }
 }
+

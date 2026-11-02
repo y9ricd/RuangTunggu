@@ -334,3 +334,4 @@ fun PoliDetailScreen(
         }
     }
 }
+
