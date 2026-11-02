@@ -63,6 +63,7 @@ import com.ruangtunggu.ui.theme.RTBrandSlate
 import com.ruangtunggu.ui.theme.RTBrandTeal
 
 @Composable
+@Suppress("FunctionName")
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()

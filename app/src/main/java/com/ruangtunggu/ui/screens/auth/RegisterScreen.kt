@@ -74,6 +74,7 @@ import com.ruangtunggu.ui.theme.RTBrandNavy
 import com.ruangtunggu.ui.theme.RTBrandTeal
 
 @Composable
+@Suppress("FunctionName")
 fun RegisterScreen(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel()

@@ -41,6 +41,7 @@ import com.ruangtunggu.ui.theme.RTBrandSlate
 import com.ruangtunggu.ui.theme.RTBrandTeal
 
 @Composable
+@Suppress("FunctionName")
 fun SplashScreen(
     navController: NavController,
     viewModel: SplashViewModel = hiltViewModel()
