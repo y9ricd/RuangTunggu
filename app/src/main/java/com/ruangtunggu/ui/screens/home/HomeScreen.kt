@@ -7,7 +7,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,21 +21,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocalHospital
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.QueuePlayNext
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Assignment
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocalHospital
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.QueuePlayNext
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,12 +57,10 @@ import com.ruangtunggu.ui.components.RTHeaderWave
 import com.ruangtunggu.ui.components.RTQueueCard
 import com.ruangtunggu.ui.navigation.Routes
 import com.ruangtunggu.ui.theme.RTBrandBorder
-import com.ruangtunggu.ui.theme.RTBrandMint
 import com.ruangtunggu.ui.theme.RTBrandMuted
 import com.ruangtunggu.ui.theme.RTBrandNavy
 import com.ruangtunggu.ui.theme.RTBrandSlate
 import com.ruangtunggu.ui.theme.RTBrandTeal
-import com.ruangtunggu.ui.theme.RTBrandTealSurface
 
 @Composable
 fun HomeScreen(
@@ -79,7 +72,7 @@ fun HomeScreen(
     var currentTab by remember { mutableStateOf("Beranda") }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = Color(0xFFFAFCFC),
         bottomBar = {
             FigmaBottomBar(
                 currentTab = currentTab,
@@ -103,13 +96,13 @@ fun HomeScreen(
             // ── 1. Top Teal Header with Wave, Greeting & Floating Search ────
             RTHeaderWave(
                 modifier = Modifier.fillMaxWidth(),
-                height = 240.dp,
-                waveDip = 0.86f
+                height = 230.dp,
+                waveDip = 0.88f
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp, vertical = 24.dp)
+                        .padding(horizontal = 20.dp, vertical = 20.dp)
                 ) {
                     // Greeting Row
                     Row(
@@ -118,12 +111,12 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            // Initials Avatar Circle
+                            // Initials Avatar Circle "NP"
                             Box(
                                 modifier = Modifier
-                                    .size(42.dp)
+                                    .size(44.dp)
                                     .clip(CircleShape)
-                                    .background(Color.White.copy(alpha = 0.28f)),
+                                    .background(Color(0xFF38B2A5)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -140,11 +133,11 @@ fun HomeScreen(
                                 Text(
                                     text = "${uiState.greetingText.ifEmpty { "Selamat pagi" }} 👋",
                                     fontSize = 13.sp,
-                                    color = Color.White.copy(alpha = 0.88f)
+                                    color = Color.White.copy(alpha = 0.90f)
                                 )
                                 Text(
                                     text = uiState.patientName,
-                                    fontSize = 17.sp,
+                                    fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White
                                 )
@@ -157,12 +150,12 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .size(42.dp)
                                     .clip(CircleShape)
-                                    .background(Color.White.copy(alpha = 0.22f))
+                                    .background(Color(0xFF38B2A5))
                                     .clickable { navController.navigate(Routes.Notifications) },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Notifications,
+                                    imageVector = Icons.Outlined.Notifications,
                                     contentDescription = "Notifikasi",
                                     tint = Color.White,
                                     modifier = Modifier.size(22.dp)
@@ -187,20 +180,20 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp)
+                            .height(48.dp)
                             .shadow(
                                 elevation = 6.dp,
-                                shape = RoundedCornerShape(26.dp),
+                                shape = RoundedCornerShape(24.dp),
                                 spotColor = Color(0x1F000000)
                             )
-                            .clip(RoundedCornerShape(26.dp))
+                            .clip(RoundedCornerShape(24.dp))
                             .background(Color.White)
                             .clickable { navController.navigate(Routes.Search()) }
                             .padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Search,
+                            imageVector = Icons.Outlined.Search,
                             contentDescription = "Cari",
                             tint = RTBrandMuted,
                             modifier = Modifier.size(20.dp)
@@ -208,7 +201,7 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
                             text = "Cari rumah sakit atau poli...",
-                            fontSize = 14.sp,
+                            fontSize = 13.5.sp,
                             color = RTBrandMuted
                         )
                     }
@@ -219,7 +212,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-20).dp)
+                    .offset(y = (-24).dp)
                     .padding(horizontal = 20.dp)
             ) {
                 RTQueueCard(
@@ -258,8 +251,8 @@ fun HomeScreen(
                     // Cari RS
                     FigmaServiceButton(
                         label = "Cari RS",
-                        icon = Icons.Default.LocalHospital,
-                        backgroundColor = Color(0xFFE6F7F5),
+                        icon = Icons.Outlined.LocalHospital,
+                        backgroundColor = Color(0xFFE0F7F4),
                         iconTint = RTBrandTeal,
                         onClick = { navController.navigate(Routes.Search()) }
                     )
@@ -267,7 +260,7 @@ fun HomeScreen(
                     // Jadwal
                     FigmaServiceButton(
                         label = "Jadwal",
-                        icon = Icons.Default.CalendarMonth,
+                        icon = Icons.Outlined.CalendarMonth,
                         backgroundColor = Color(0xFFD1F4EC),
                         iconTint = RTBrandTeal,
                         onClick = { navController.navigate(Routes.SelectSchedule("all")) }
@@ -276,7 +269,7 @@ fun HomeScreen(
                     // Riwayat
                     FigmaServiceButton(
                         label = "Riwayat",
-                        icon = Icons.Default.History,
+                        icon = Icons.Outlined.Schedule,
                         backgroundColor = Color(0xFFE8FAF8),
                         iconTint = RTBrandTeal,
                         onClick = { navController.navigate(Routes.History) }
@@ -285,8 +278,8 @@ fun HomeScreen(
                     // Profil
                     FigmaServiceButton(
                         label = "Profil",
-                        icon = Icons.Default.Person,
-                        backgroundColor = Color(0xFFF1F5F9),
+                        icon = Icons.Outlined.Person,
+                        backgroundColor = Color(0xFFEEF2F6),
                         iconTint = Color(0xFF475569),
                         onClick = { navController.navigate(Routes.Profile) }
                     )
@@ -331,7 +324,7 @@ fun HomeScreen(
                         .padding(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    listOf("Umum", "Anak", "Gigi", "Kandungan", "Mata", "THT").forEach { poli ->
+                    listOf("Umum", "Anak", "Gigi", "Kandungan").forEach { poli ->
                         val isSelected = selectedPoli == poli
                         Box(
                             modifier = Modifier
@@ -344,14 +337,14 @@ fun HomeScreen(
                                     shape = RoundedCornerShape(19.dp)
                                 )
                                 .clickable { selectedPoli = poli }
-                                .padding(horizontal = 18.dp),
+                                .padding(horizontal = 20.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = poli,
                                 fontSize = 13.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (isSelected) Color.White else Color(0xFF334155)
+                                color = if (isSelected) Color.White else RTBrandNavy
                             )
                         }
                     }
@@ -463,7 +456,7 @@ private fun FigmaHospitalCard(
                 elevation = 6.dp,
                 shape = RoundedCornerShape(20.dp),
                 spotColor = Color(0x1F000000),
-                ambientColor = Color(0x0F000000)
+                ambientColor = Color(0x0A000000)
             )
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White)
@@ -474,17 +467,17 @@ private fun FigmaHospitalCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(90.dp)
+                    .height(95.dp)
                     .background(
                         Brush.linearGradient(colors = gradientColors)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.LocalHospital,
+                    imageVector = Icons.Outlined.LocalHospital,
                     contentDescription = null,
-                    tint = Color.White.copy(alpha = 0.6f),
-                    modifier = Modifier.size(40.dp)
+                    tint = Color.White.copy(alpha = 0.7f),
+                    modifier = Modifier.size(42.dp)
                 )
             }
 
@@ -502,7 +495,7 @@ private fun FigmaHospitalCard(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Star,
+                        imageVector = Icons.Filled.Star,
                         contentDescription = null,
                         tint = Color(0xFFF59E0B),
                         modifier = Modifier.size(13.dp)
@@ -530,9 +523,9 @@ private fun FigmaBottomBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(elevation = 14.dp, spotColor = Color(0x14000000))
+            .shadow(elevation = 12.dp, spotColor = Color(0x14000000))
             .background(Color.White)
-            .padding(horizontal = 24.dp, vertical = 10.dp)
+            .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -542,7 +535,7 @@ private fun FigmaBottomBar(
             // Beranda
             BottomNavTab(
                 label = "Beranda",
-                icon = if (currentTab == "Beranda") Icons.Default.Home else Icons.Outlined.Home,
+                icon = Icons.Outlined.Home,
                 isSelected = currentTab == "Beranda",
                 onClick = { onTabSelect("Beranda") }
             )
@@ -550,7 +543,7 @@ private fun FigmaBottomBar(
             // Antrean
             BottomNavTab(
                 label = "Antrean",
-                icon = if (currentTab == "Antrean") Icons.Default.QueuePlayNext else Icons.Outlined.QueuePlayNext,
+                icon = Icons.Outlined.Assignment,
                 isSelected = currentTab == "Antrean",
                 onClick = { onTabSelect("Antrean") }
             )
@@ -558,7 +551,7 @@ private fun FigmaBottomBar(
             // Riwayat
             BottomNavTab(
                 label = "Riwayat",
-                icon = if (currentTab == "Riwayat") Icons.Default.History else Icons.Outlined.History,
+                icon = Icons.Outlined.History,
                 isSelected = currentTab == "Riwayat",
                 onClick = { onTabSelect("Riwayat") }
             )
@@ -566,7 +559,7 @@ private fun FigmaBottomBar(
             // Profil
             BottomNavTab(
                 label = "Profil",
-                icon = if (currentTab == "Profil") Icons.Default.Person else Icons.Outlined.Person,
+                icon = Icons.Outlined.Person,
                 isSelected = currentTab == "Profil",
                 onClick = { onTabSelect("Profil") }
             )
@@ -585,14 +578,14 @@ private fun BottomNavTab(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = 6.dp, vertical = 2.dp)
     ) {
         if (isSelected) {
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color(0xFFD1F4EC))
-                    .padding(horizontal = 16.dp, vertical = 5.dp),
+                    .padding(horizontal = 18.dp, vertical = 5.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -611,7 +604,7 @@ private fun BottomNavTab(
             )
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(3.dp))
 
         Text(
             text = label,

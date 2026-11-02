@@ -22,11 +22,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Badge
-import androidx.compose.material.icons.filled.Fingerprint
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -51,6 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -68,7 +68,6 @@ import com.ruangtunggu.ui.theme.RTBrandBorder
 import com.ruangtunggu.ui.theme.RTBrandInputBg
 import com.ruangtunggu.ui.theme.RTBrandMuted
 import com.ruangtunggu.ui.theme.RTBrandNavy
-import com.ruangtunggu.ui.theme.RTBrandSlate
 import com.ruangtunggu.ui.theme.RTBrandTeal
 
 @Composable
@@ -96,7 +95,7 @@ fun LoginScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = Color.White
+        containerColor = Color(0xFFF8FAFC)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -106,29 +105,29 @@ fun LoginScreen(
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // ── Top Wave Header with Logo ──────────────────────────────
+            // ── Top Teal Wave Header with Centered Logo Card ──────────
             RTHeaderWave(
                 modifier = Modifier.fillMaxWidth(),
-                height = 290.dp,
+                height = 270.dp,
                 waveDip = 0.88f
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 45.dp),
+                        .padding(top = 40.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     RTLogoCard(
-                        size = 78.dp,
-                        cornerRadius = 22.dp,
-                        elevation = 10.dp
+                        size = 68.dp,
+                        cornerRadius = 20.dp,
+                        elevation = 8.dp
                     )
 
                     Spacer(modifier = Modifier.height(14.dp))
 
                     Text(
                         text = "Selamat datang kembali",
-                        fontSize = 22.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -147,17 +146,17 @@ fun LoginScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-30).dp)
+                    .offset(y = (-36).dp)
                     .padding(horizontal = 20.dp)
                     .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(24.dp),
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(22.dp),
                         spotColor = Color(0x1F000000),
-                        ambientColor = Color(0x14000000)
+                        ambientColor = Color(0x10000000)
                     )
-                    .clip(RoundedCornerShape(24.dp))
+                    .clip(RoundedCornerShape(22.dp))
                     .background(Color.White)
-                    .padding(22.dp)
+                    .padding(20.dp)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     // Field 1: NIK / Email
@@ -174,18 +173,11 @@ fun LoginScreen(
                         value = uiState.identifier,
                         onValueChange = viewModel::onIdentifierChanged,
                         placeholder = "Masukkan NIK atau email",
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Badge,
-                                contentDescription = null,
-                                tint = RTBrandSlate,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
+                        leadingIcon = Icons.Outlined.Badge,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
 
-                    Spacer(modifier = Modifier.height(18.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     // Field 2: Kata Sandi
                     Text(
@@ -201,18 +193,11 @@ fun LoginScreen(
                         value = uiState.password,
                         onValueChange = viewModel::onPasswordChanged,
                         placeholder = "Masukkan kata sandi",
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = null,
-                                tint = RTBrandSlate,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
+                        leadingIcon = Icons.Outlined.Lock,
                         trailingIcon = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
-                                    imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    imageVector = if (passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
                                     contentDescription = "Toggle Password",
                                     tint = RTBrandMuted,
                                     modifier = Modifier.size(20.dp)
@@ -223,16 +208,16 @@ fun LoginScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
 
-                    Spacer(modifier = Modifier.height(18.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     // CAPTCHA Box
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(52.dp)
-                            .clip(RoundedCornerShape(14.dp))
+                            .height(50.dp)
+                            .clip(RoundedCornerShape(12.dp))
                             .background(RTBrandInputBg)
-                            .border(1.dp, RTBrandBorder, RoundedCornerShape(14.dp))
+                            .border(1.dp, RTBrandBorder, RoundedCornerShape(12.dp))
                             .clickable { viewModel.onCaptchaToggled(!uiState.isCaptchaVerified) }
                             .padding(horizontal = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -264,7 +249,7 @@ fun LoginScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(22.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     // Login Button
                     Button(
@@ -272,8 +257,8 @@ fun LoginScreen(
                         enabled = !uiState.isLoading,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(52.dp),
-                        shape = RoundedCornerShape(16.dp),
+                            .height(50.dp),
+                        shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = RTBrandTeal,
                             contentColor = Color.White
@@ -319,34 +304,10 @@ fun LoginScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-14).dp)
-                    .padding(horizontal = 24.dp, vertical = 8.dp),
+                    .offset(y = (-18).dp)
+                    .padding(horizontal = 24.dp, vertical = 6.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Biometric shortcut option
-                Row(
-                    modifier = Modifier
-                        .clickable { viewModel.onBiometricSuccess() }
-                        .padding(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Fingerprint,
-                        contentDescription = "Login Biometrik",
-                        tint = RTBrandTeal,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Masuk dengan Sidik Jari",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = RTBrandTeal
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
                 // Belum punya akun? Daftar sekarang
                 Text(
                     text = "Belum punya akun? Daftar sekarang",
@@ -358,7 +319,7 @@ fun LoginScreen(
                         .padding(8.dp)
                 )
 
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 // Footer terms
                 Text(
@@ -376,15 +337,15 @@ fun LoginScreen(
 
 /**
  * Clean Modern Input Field matching Figma styling:
- * Background #F8FAFC, 1dp border #E2E8F0, rounded 14dp, height 52dp.
+ * Background #F8FAFC, 1dp border #E2E8F0, rounded 12dp, height 50dp.
  */
 @Composable
 private fun FigmaInputField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
+    leadingIcon: ImageVector,
     modifier: Modifier = Modifier,
-    leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
@@ -392,17 +353,21 @@ private fun FigmaInputField(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(52.dp)
-            .clip(RoundedCornerShape(14.dp))
+            .height(50.dp)
+            .clip(RoundedCornerShape(12.dp))
             .background(RTBrandInputBg)
-            .border(1.dp, RTBrandBorder, RoundedCornerShape(14.dp))
+            .border(1.dp, RTBrandBorder, RoundedCornerShape(12.dp))
             .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (leadingIcon != null) {
-            leadingIcon()
-            Spacer(modifier = Modifier.width(10.dp))
-        }
+        Icon(
+            imageVector = leadingIcon,
+            contentDescription = null,
+            tint = RTBrandMuted,
+            modifier = Modifier.size(20.dp)
+        )
+
+        Spacer(modifier = Modifier.width(10.dp))
 
         Box(
             modifier = Modifier.weight(1f),
@@ -412,7 +377,7 @@ private fun FigmaInputField(
                 Text(
                     text = placeholder,
                     color = RTBrandMuted,
-                    fontSize = 14.sp
+                    fontSize = 13.5.sp
                 )
             }
             BasicTextField(
@@ -421,7 +386,7 @@ private fun FigmaInputField(
                 singleLine = true,
                 textStyle = TextStyle(
                     color = RTBrandNavy,
-                    fontSize = 14.sp,
+                    fontSize = 13.5.sp,
                     fontWeight = FontWeight.Medium
                 ),
                 cursorBrush = SolidColor(RTBrandTeal),

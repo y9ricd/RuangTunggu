@@ -24,13 +24,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Badge
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -55,6 +55,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -70,7 +71,6 @@ import com.ruangtunggu.ui.theme.RTBrandBorder
 import com.ruangtunggu.ui.theme.RTBrandInputBg
 import com.ruangtunggu.ui.theme.RTBrandMuted
 import com.ruangtunggu.ui.theme.RTBrandNavy
-import com.ruangtunggu.ui.theme.RTBrandSlate
 import com.ruangtunggu.ui.theme.RTBrandTeal
 
 @Composable
@@ -81,7 +81,6 @@ fun RegisterScreen(
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
@@ -100,7 +99,7 @@ fun RegisterScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = Color.White
+        containerColor = Color(0xFFF8FAFC)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -110,52 +109,48 @@ fun RegisterScreen(
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // ── Top Wave Header ─────────────────────────────────────────
+            // ── Top Teal Header with Back Button and Wave ───────────────
             RTHeaderWave(
                 modifier = Modifier.fillMaxWidth(),
-                height = 220.dp,
+                height = 200.dp,
                 waveDip = 0.86f
             ) {
-                Column(
+                Row(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 20.dp, vertical = 24.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                    Box(
+                        modifier = Modifier
+                            .size(42.dp)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.22f))
+                            .clickable { navController.popBackStack() },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Color.White.copy(alpha = 0.22f))
-                                .clickable { navController.popBackStack() },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Kembali",
-                                tint = Color.White,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Kembali",
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
 
-                        Spacer(modifier = Modifier.width(14.dp))
+                    Spacer(modifier = Modifier.width(14.dp))
 
-                        Column {
-                            Text(
-                                text = "Daftar Akun Baru",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                            Text(
-                                text = "Lengkapi data diri Anda",
-                                fontSize = 12.sp,
-                                color = Color.White.copy(alpha = 0.88f)
-                            )
-                        }
+                    Column {
+                        Text(
+                            text = "Buat Akun Baru",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "Lengkapi data diri Anda",
+                            fontSize = 12.sp,
+                            color = Color.White.copy(alpha = 0.88f)
+                        )
                     }
                 }
             }
@@ -164,77 +159,76 @@ fun RegisterScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-30).dp)
+                    .offset(y = (-36).dp)
                     .padding(horizontal = 20.dp)
                     .shadow(
                         elevation = 8.dp,
-                        shape = RoundedCornerShape(24.dp),
+                        shape = RoundedCornerShape(22.dp),
                         spotColor = Color(0x1F000000),
-                        ambientColor = Color(0x12000000)
+                        ambientColor = Color(0x10000000)
                     )
-                    .clip(RoundedCornerShape(24.dp))
+                    .clip(RoundedCornerShape(22.dp))
                     .background(Color.White)
-                    .padding(22.dp)
+                    .padding(20.dp)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    // NIK
-                    RegisterFieldLabel("NIK Pasien (16 digit)")
-                    RegisterInputField(
-                        value = uiState.nik,
-                        onValueChange = viewModel::onNikChanged,
-                        placeholder = "Masukkan NIK sesuai KTP",
-                        icon = Icons.Default.Badge,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    // 1. Nama Lengkap
+                    FigmaFieldLabel("Nama lengkap")
+                    FigmaRegisterInputField(
+                        value = uiState.namaLengkap,
+                        onValueChange = viewModel::onNamaLengkapChanged,
+                        placeholder = "Sesuai KTP",
+                        icon = Icons.Outlined.Person
                     )
 
                     Spacer(modifier = Modifier.height(14.dp))
 
-                    // Nama Lengkap
-                    RegisterFieldLabel("Nama Lengkap")
-                    RegisterInputField(
-                        value = uiState.nama,
-                        onValueChange = viewModel::onNamaChanged,
-                        placeholder = "Nama lengkap sesuai KTP",
-                        icon = Icons.Default.Person
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    // Email
-                    RegisterFieldLabel("Email")
-                    RegisterInputField(
-                        value = uiState.email,
-                        onValueChange = viewModel::onEmailChanged,
-                        placeholder = "contoh@email.com",
-                        icon = Icons.Default.Email,
+                    // 2. Email / No. HP
+                    FigmaFieldLabel("Email / No. HP")
+                    FigmaRegisterInputField(
+                        value = uiState.emailOrPhone,
+                        onValueChange = viewModel::onEmailOrPhoneChanged,
+                        placeholder = "email@contoh.com",
+                        icon = Icons.Outlined.Email,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
 
                     Spacer(modifier = Modifier.height(14.dp))
 
-                    // Nomor HP
-                    RegisterFieldLabel("Nomor WhatsApp / HP")
-                    RegisterInputField(
-                        value = uiState.noHp,
-                        onValueChange = viewModel::onNoHpChanged,
-                        placeholder = "081234567890",
-                        icon = Icons.Default.Phone,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                    // 3. NIK
+                    FigmaFieldLabel("NIK")
+                    FigmaRegisterInputField(
+                        value = uiState.nik,
+                        onValueChange = viewModel::onNikChanged,
+                        placeholder = "16 digit NIK",
+                        icon = Icons.Outlined.Badge,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
                     Spacer(modifier = Modifier.height(14.dp))
 
-                    // Kata Sandi
-                    RegisterFieldLabel("Kata Sandi")
-                    RegisterInputField(
+                    // 4. Tempat, tanggal lahir
+                    FigmaFieldLabel("Tempat, tanggal lahir")
+                    FigmaRegisterInputField(
+                        value = uiState.tempatTanggalLahir,
+                        onValueChange = viewModel::onTempatTanggalLahirChanged,
+                        placeholder = "Kota, DD/MM/YYYY",
+                        icon = Icons.Outlined.CalendarToday
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    // 5. Kata sandi
+                    FigmaFieldLabel("Kata sandi")
+                    FigmaRegisterInputField(
                         value = uiState.password,
                         onValueChange = viewModel::onPasswordChanged,
                         placeholder = "Minimal 8 karakter",
-                        icon = Icons.Default.Lock,
+                        icon = Icons.Outlined.Lock,
                         trailingIcon = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
-                                    imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    imageVector = if (passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
                                     contentDescription = null,
                                     tint = RTBrandMuted,
                                     modifier = Modifier.size(20.dp)
@@ -247,37 +241,14 @@ fun RegisterScreen(
 
                     Spacer(modifier = Modifier.height(14.dp))
 
-                    // Konfirmasi Kata Sandi
-                    RegisterFieldLabel("Konfirmasi Kata Sandi")
-                    RegisterInputField(
-                        value = uiState.confirmPassword,
-                        onValueChange = viewModel::onConfirmPasswordChanged,
-                        placeholder = "Ulangi kata sandi",
-                        icon = Icons.Default.Lock,
-                        trailingIcon = {
-                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                                Icon(
-                                    imageVector = if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = null,
-                                    tint = RTBrandMuted,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        },
-                        visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // CAPTCHA Box
+                    // 6. CAPTCHA Box
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .clip(RoundedCornerShape(14.dp))
+                            .clip(RoundedCornerShape(12.dp))
                             .background(RTBrandInputBg)
-                            .border(1.dp, RTBrandBorder, RoundedCornerShape(14.dp))
+                            .border(1.dp, RTBrandBorder, RoundedCornerShape(12.dp))
                             .clickable { viewModel.onCaptchaToggled(!uiState.isCaptchaVerified) }
                             .padding(horizontal = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -309,16 +280,16 @@ fun RegisterScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(22.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                    // Register Button
+                    // 7. Button "Daftar"
                     Button(
                         onClick = viewModel::register,
                         enabled = !uiState.isLoading,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(52.dp),
-                        shape = RoundedCornerShape(16.dp),
+                            .height(50.dp),
+                        shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = RTBrandTeal,
                             contentColor = Color.White
@@ -333,7 +304,7 @@ fun RegisterScreen(
                             )
                         } else {
                             Text(
-                                text = "Daftar Sekarang",
+                                text = "Daftar",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -349,7 +320,7 @@ fun RegisterScreen(
                 fontWeight = FontWeight.Bold,
                 color = RTBrandTeal,
                 modifier = Modifier
-                    .offset(y = (-10).dp)
+                    .offset(y = (-16).dp)
                     .clickable { navController.popBackStack() }
                     .padding(8.dp)
             )
@@ -360,7 +331,7 @@ fun RegisterScreen(
 }
 
 @Composable
-private fun RegisterFieldLabel(text: String) {
+private fun FigmaFieldLabel(text: String) {
     Text(
         text = text,
         fontSize = 13.sp,
@@ -371,11 +342,11 @@ private fun RegisterFieldLabel(text: String) {
 }
 
 @Composable
-private fun RegisterInputField(
+private fun FigmaRegisterInputField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     trailingIcon: (@Composable () -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
@@ -384,17 +355,17 @@ private fun RegisterInputField(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(RTBrandInputBg)
-            .border(1.dp, RTBrandBorder, RoundedCornerShape(14.dp))
+            .border(1.dp, RTBrandBorder, RoundedCornerShape(12.dp))
             .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = RTBrandSlate,
-            modifier = Modifier.size(19.dp)
+            tint = RTBrandMuted,
+            modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
 
@@ -406,7 +377,7 @@ private fun RegisterInputField(
                 Text(
                     text = placeholder,
                     color = RTBrandMuted,
-                    fontSize = 13.sp
+                    fontSize = 13.5.sp
                 )
             }
             BasicTextField(

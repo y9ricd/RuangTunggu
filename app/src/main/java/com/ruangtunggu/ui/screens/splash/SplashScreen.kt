@@ -81,27 +81,27 @@ fun SplashScreen(
         // Upper 55%: Organic Wave Header with RuangTunggu Logo
         RTHeaderWave(
             modifier = Modifier.fillMaxWidth(),
-            height = 430.dp,
+            height = 420.dp,
             waveDip = 0.90f
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 70.dp, start = 24.dp, end = 24.dp),
+                    .padding(top = 65.dp, start = 24.dp, end = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                // Logo Card matching Figma
+                // Official Logo Card matching Figma
                 RTLogoCard(
                     modifier = Modifier
                         .scale(scale.value)
                         .alpha(alpha.value),
-                    size = 94.dp,
-                    cornerRadius = 26.dp,
-                    elevation = 14.dp
+                    size = 92.dp,
+                    cornerRadius = 24.dp,
+                    elevation = 12.dp
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(18.dp))
 
                 // App Title
                 Text(
@@ -109,7 +109,7 @@ fun SplashScreen(
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    letterSpacing = 1.8.sp,
+                    letterSpacing = 1.6.sp,
                     modifier = Modifier.alpha(alpha.value)
                 )
 
@@ -118,7 +118,7 @@ fun SplashScreen(
                 // Tagline
                 Text(
                     text = "Antre tanpa ribet, sehat tanpa menunggu",
-                    fontSize = 14.sp,
+                    fontSize = 13.5.sp,
                     color = Color.White.copy(alpha = 0.92f),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.alpha(alpha.value)
@@ -131,13 +131,13 @@ fun SplashScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 28.dp, vertical = 36.dp),
+                .padding(horizontal = 24.dp, vertical = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Heading
             Text(
                 text = "Antre dari mana saja",
-                fontSize = 24.sp,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = RTBrandNavy,
                 textAlign = TextAlign.Center
@@ -148,13 +148,13 @@ fun SplashScreen(
             // Subtitle
             Text(
                 text = "Daftar, pantau, dan dapatkan notifikasi\ngiliran Anda langsung dari ponsel.",
-                fontSize = 14.sp,
+                fontSize = 13.5.sp,
                 lineHeight = 22.sp,
                 color = RTBrandSlate,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // Primary Button: Mulai
             Button(
@@ -165,8 +165,8 @@ fun SplashScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
-                shape = RoundedCornerShape(16.dp),
+                    .height(50.dp),
+                shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = RTBrandTeal,
                     contentColor = Color.White
@@ -180,7 +180,7 @@ fun SplashScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Secondary Link: Sudah punya akun? Masuk
             Text(
