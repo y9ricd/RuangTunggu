@@ -1,1 +1,0 @@
--keep,allowobfuscation,allowshrinking class com.ruangtunggu.ui.screens.support.SupportViewModel
