@@ -62,6 +62,13 @@ android {
     }
 }
 
+androidComponents {
+    beforeVariants { variantBuilder ->
+        variantBuilder.enableAndroidTest = false
+        variantBuilder.enableUnitTest = false
+    }
+}
+
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
