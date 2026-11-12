@@ -83,6 +83,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -987,28 +988,38 @@ fun RTQueueCard(
             // Standard Footer with Dynamic Wait Time Formula ("Sisa 4 antrean · ± 20–25 menit")
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                AnimatedContent(
-                    targetState = queue.dynamicWaitSummary,
-                    transitionSpec = {
-                        (slideInVertically { h -> h } + fadeIn()).togetherWith(
-                            slideOutVertically { h -> -h } + fadeOut()
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    AnimatedContent(
+                        targetState = queue.dynamicWaitSummary,
+                        transitionSpec = {
+                            (slideInVertically { h -> h } + fadeIn()).togetherWith(
+                                slideOutVertically { h -> -h } + fadeOut()
+                            )
+                        },
+                        label = "DynamicWaitTimeSlide"
+                    ) { waitSummary ->
+                        Text(
+                            text = waitSummary,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = RTColors.SlateBodyText,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
-                    },
-                    label = "DynamicWaitTimeSlide"
-                ) { waitSummary ->
-                    Text(
-                        text = waitSummary,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = RTColors.SlateBodyText,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
+                    }
                 }
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     if (isPaused) {
                         Box(
                             modifier = Modifier
@@ -1023,7 +1034,9 @@ fun RTQueueCard(
                                 text = "Chat Petugas",
                                 fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = RTColors.BrandPrimaryTeal
+                                color = RTColors.BrandPrimaryTeal,
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     } else {
@@ -1040,7 +1053,9 @@ fun RTQueueCard(
                                 text = "Pengingat",
                                 fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = RTColors.BrandPrimaryTeal
+                                color = RTColors.BrandPrimaryTeal,
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     }
@@ -1051,14 +1066,16 @@ fun RTQueueCard(
                             .springClickable(onClick = onPantauClick)
                             .clip(RoundedCornerShape(16.dp))
                             .background(RTColors.BrandPrimaryTeal)
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 14.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "Pantau",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = RTColors.PureWhite
+                            color = RTColors.PureWhite,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 }

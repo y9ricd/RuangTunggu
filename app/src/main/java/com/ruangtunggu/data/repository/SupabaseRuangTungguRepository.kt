@@ -98,7 +98,9 @@ class SupabaseAuthRepositoryImpl @Inject constructor(
                 id = "usr-${System.currentTimeMillis()}",
                 fullName = derivedName,
                 initials = computeInitials(derivedName),
-                nik = if (cleanId.all { it.isDigit() } && cleanId.length == 16) cleanId else "3515081201950001",
+                nik = if (cleanId.all { it.isDigit() } && cleanId.length == 16) cleanId else "-",
+                gender = "-",
+                phone = if (cleanId.all { it.isDigit() }) cleanId else "-",
                 email = resolvedEmail,
                 isVerified = true
             )
@@ -125,11 +127,9 @@ class SupabaseAuthRepositoryImpl @Inject constructor(
         return try {
             delay(400)
             val cleanInput = emailOrPhone.trim()
-            val resolvedEmail = if (cleanInput.contains("@")) {
-                cleanInput
-            } else {
-                "$nik@ruangtunggu.id"
-            }
+            val isPhoneInput = cleanInput.all { it.isDigit() } && cleanInput.length >= 8
+            val resolvedEmail = if (cleanInput.contains("@")) cleanInput else "-"
+            val resolvedPhone = if (isPhoneInput) cleanInput else "-"
 
             val newProfile = PatientProfile(
                 id = "usr-${System.currentTimeMillis()}",
@@ -137,8 +137,9 @@ class SupabaseAuthRepositoryImpl @Inject constructor(
                 initials = computeInitials(fullName.trim()),
                 nik = nik.trim(),
                 birthPlaceDate = birthPlaceDate.trim(),
+                gender = "-",
+                phone = resolvedPhone,
                 email = resolvedEmail,
-                phone = if (cleanInput.all { it.isDigit() }) cleanInput else "081234567890",
                 isVerified = true
             )
 
@@ -785,78 +786,98 @@ class SupabaseQueueRepositoryImpl @Inject constructor(
         dateIndex: Int
     ): List<DoctorScheduleItem> {
         val isTomorrowOrLater = dateIndex >= 1
-        return listOf(
+        val cleanPoli = poliShortName.trim()
+
+        val rawDoctors = when {
+            cleanPoli.equals("Umum", ignoreCase = true) -> listOf(
+                Triple("dr. Budi Santoso", "BS", "Dokter Umum"),
+                Triple("dr. Siti Aminah", "SA", "Dokter Umum"),
+                Triple("dr. Hendra Wijaya", "HW", "Dokter Umum"),
+                Triple("dr. Rina Puspita", "RP", "Dokter Umum"),
+                Triple("dr. Fajar Pratama", "FP", "Dokter Umum")
+            )
+            cleanPoli.equals("Anak", ignoreCase = true) -> listOf(
+                Triple("dr. Abdul Halim, Sp.A", "AH", "Spesialis Anak"),
+                Triple("dr. Maya Indah, Sp.A", "MI", "Spesialis Anak"),
+                Triple("dr. Rahmat Hidayat, Sp.A", "RH", "Spesialis Anak"),
+                Triple("dr. Clara Wijaya, Sp.A", "CW", "Spesialis Anak"),
+                Triple("dr. Dimas Anggara, Sp.A", "DA", "Spesialis Anak")
+            )
+            cleanPoli.equals("Gigi", ignoreCase = true) -> listOf(
+                Triple("drg. Ahmad Fauzi, Sp.KG", "AF", "Spesialis Konservasi Gigi"),
+                Triple("drg. Ratna Dewi", "RD", "Dokter Gigi Umum"),
+                Triple("drg. Bambang Irawan, Sp.BM", "BI", "Spesialis Bedah Mulut"),
+                Triple("drg. Nadia Safitri, Sp.Ort", "NS", "Spesialis Ortodonti"),
+                Triple("drg. Hendro Wicaksono", "HW", "Dokter Gigi Umum")
+            )
+            cleanPoli.equals("Kandungan", ignoreCase = true) -> listOf(
+                Triple("dr. Diana Kusuma, Sp.OG", "DK", "Spesialis Obstetri & Ginekologi"),
+                Triple("dr. Farhan Malik, Sp.OG", "FM", "Spesialis Kebidanan & Kandungan"),
+                Triple("dr. Anita Rahayu, Sp.OG", "AR", "Spesialis Obstetri & Ginekologi"),
+                Triple("dr. Wulandari, Sp.OG", "WL", "Spesialis Kandungan"),
+                Triple("dr. Surya Kencana, Sp.OG", "SK", "Spesialis Obstetri & Ginekologi")
+            )
+            cleanPoli.equals("Mata", ignoreCase = true) -> listOf(
+                Triple("dr. Haryanto, Sp.M", "HY", "Spesialis Mata"),
+                Triple("dr. Jessica Tan, Sp.M", "JT", "Spesialis Mata"),
+                Triple("dr. Agus Prabowo, Sp.M", "AP", "Spesialis Mata"),
+                Triple("dr. Lisa Mariana, Sp.M", "LM", "Spesialis Mata")
+            )
+            cleanPoli.equals("Penyakit Dalam", ignoreCase = true) || cleanPoli.equals("Dalam", ignoreCase = true) -> listOf(
+                Triple("dr. Bambang Sutrisno, Sp.PD", "BS", "Spesialis Penyakit Dalam"),
+                Triple("dr. Suryo Wibowo, Sp.PD", "SW", "Spesialis Penyakit Dalam"),
+                Triple("dr. Ratna Kartika, Sp.PD", "RK", "Spesialis Penyakit Dalam"),
+                Triple("dr. Gunawan, Sp.PD-KGEH", "GN", "Spesialis Gastroenterologi")
+            )
+            cleanPoli.equals("Jantung", ignoreCase = true) -> listOf(
+                Triple("dr. Hartono, Sp.JP", "HT", "Spesialis Jantung & Pembuluh Darah"),
+                Triple("dr. Nadia Putri, Sp.JP", "NP", "Spesialis Jantung & Pembuluh Darah"),
+                Triple("dr. Danu Wicaksono, Sp.JP", "DW", "Spesialis Kardiologi")
+            )
+            cleanPoli.equals("Saraf", ignoreCase = true) -> listOf(
+                Triple("dr. Lukman Hakim, Sp.S", "LH", "Spesialis Saraf"),
+                Triple("dr. Dewi Lestari, Sp.N", "DL", "Spesialis Neurologi"),
+                Triple("dr. Andreas Wicaksono, Sp.S", "AW", "Spesialis Saraf")
+            )
+            cleanPoli.equals("Kulit", ignoreCase = true) -> listOf(
+                Triple("dr. Claudia Susanti, Sp.DV", "CS", "Spesialis Dermatologi"),
+                Triple("dr. Kevin Pratama, Sp.KK", "KP", "Spesialis Kulit & Kelamin"),
+                Triple("dr. Cindy Monica, Sp.DV", "CM", "Spesialis Kulit & Kelamin")
+            )
+            cleanPoli.equals("THT", ignoreCase = true) -> listOf(
+                Triple("dr. Aris Munandar, Sp.THT-BKL", "AM", "Spesialis Telinga Hidung Tenggorok"),
+                Triple("dr. Silvia Anggraini, Sp.THT", "SA", "Spesialis THT"),
+                Triple("dr. Hendro Basuki, Sp.THT-BKL", "HB", "Spesialis THT")
+            )
+            else -> listOf(
+                Triple("dr. Budi Santoso", "BS", "Spesialis $cleanPoli"),
+                Triple("dr. Siti Aminah", "SA", "Spesialis $cleanPoli"),
+                Triple("dr. Hendra Wijaya", "HW", "Spesialis $cleanPoli"),
+                Triple("dr. Rina Puspita", "RP", "Spesialis $cleanPoli")
+            )
+        }
+
+        return rawDoctors.mapIndexed { idx, (docName, docInitials, docSpecialty) ->
+            val rating = 4.7 + ((idx * 3) % 4) * 0.1
+            val expYears = 5 + ((idx * 2) % 7)
+            val slot1Full = false
+            val slot2Full = false
+            val slot3Full = !isTomorrowOrLater && (idx % 2 == 0)
             DoctorScheduleItem(
-                id = "doc-abdul",
-                name = "dr. Abdul, Sp.A",
-                initials = "AL",
-                specialty = "Spesialis $poliShortName",
-                poliShortName = poliShortName,
-                rating = 4.9,
-                experienceYears = 6,
+                id = "doc-${cleanPoli.lowercase()}-$idx",
+                name = docName,
+                initials = docInitials,
+                specialty = docSpecialty,
+                poliShortName = cleanPoli,
+                rating = String.format(java.util.Locale.US, "%.1f", rating).toDoubleOrNull() ?: 4.8,
+                experienceYears = expYears,
                 slots = listOf(
-                    DoctorTimeSlot("08:00", isFull = false, currentBooked = 18, maxQuota = 30),
-                    DoctorTimeSlot("09:00", isFull = false, currentBooked = 12, maxQuota = 30),
-                    DoctorTimeSlot("13:00", isFull = !isTomorrowOrLater, currentBooked = if (isTomorrowOrLater) 8 else 30, maxQuota = 30)
-                )
-            ),
-            DoctorScheduleItem(
-                id = "doc-rahmat",
-                name = "dr. Rahmat, Sp.A",
-                initials = "BS",
-                specialty = "Spesialis $poliShortName",
-                poliShortName = poliShortName,
-                rating = 4.8,
-                experienceYears = 7,
-                slots = listOf(
-                    DoctorTimeSlot("09:00", isFull = false, currentBooked = 14, maxQuota = 30),
-                    DoctorTimeSlot("10:30", isFull = !isTomorrowOrLater, currentBooked = if (isTomorrowOrLater) 10 else 30, maxQuota = 30),
-                    DoctorTimeSlot("14:00", isFull = false, currentBooked = 9, maxQuota = 30)
-                )
-            ),
-            DoctorScheduleItem(
-                id = "doc-clara",
-                name = "dr. Clara Wijaya, Sp.A",
-                initials = "CW",
-                specialty = "Spesialis $poliShortName",
-                poliShortName = poliShortName,
-                rating = 4.7,
-                experienceYears = 8,
-                slots = listOf(
-                    DoctorTimeSlot("10:00", isFull = false, currentBooked = 11, maxQuota = 30),
-                    DoctorTimeSlot("11:30", isFull = false, currentBooked = 19, maxQuota = 30),
-                    DoctorTimeSlot("15:00", isFull = false, currentBooked = 7, maxQuota = 30)
-                )
-            ),
-            DoctorScheduleItem(
-                id = "doc-dimas",
-                name = "dr. Dimas Anggara, Sp.A",
-                initials = "DA",
-                specialty = "Spesialis $poliShortName",
-                poliShortName = poliShortName,
-                rating = 4.9,
-                experienceYears = 9,
-                slots = listOf(
-                    DoctorTimeSlot("08:00", isFull = false, currentBooked = 20, maxQuota = 30),
-                    DoctorTimeSlot("09:30", isFull = false, currentBooked = 15, maxQuota = 30),
-                    DoctorTimeSlot("13:00", isFull = !isTomorrowOrLater, currentBooked = if (isTomorrowOrLater) 6 else 30, maxQuota = 30)
-                )
-            ),
-            DoctorScheduleItem(
-                id = "doc-eka",
-                name = "dr. Eka Pratiwi, Sp.A",
-                initials = "EP",
-                specialty = "Spesialis $poliShortName",
-                poliShortName = poliShortName,
-                rating = 4.8,
-                experienceYears = 10,
-                slots = listOf(
-                    DoctorTimeSlot("09:00", isFull = false, currentBooked = 12, maxQuota = 30),
-                    DoctorTimeSlot("10:30", isFull = !isTomorrowOrLater, currentBooked = if (isTomorrowOrLater) 5 else 30, maxQuota = 30),
-                    DoctorTimeSlot("14:00", isFull = false, currentBooked = 16, maxQuota = 30)
+                    DoctorTimeSlot("08:00", isFull = slot1Full, currentBooked = 14 + idx * 2, maxQuota = 30),
+                    DoctorTimeSlot("09:30", isFull = slot2Full, currentBooked = 11 + idx * 3, maxQuota = 30),
+                    DoctorTimeSlot("13:00", isFull = slot3Full, currentBooked = if (slot3Full) 30 else 8 + idx, maxQuota = 30)
                 )
             )
-        )
+        }
     }
 
     override suspend fun sendChatMessage(text: String) {
@@ -895,6 +916,12 @@ class SupabaseQueueRepositoryImpl @Inject constructor(
 
     override suspend fun markAllNotificationsRead() {
         _notificationsFlow.update { list -> list.map { it.copy(isUnread = false) } }
+    }
+
+    override suspend fun markNotificationAsRead(id: String) {
+        _notificationsFlow.update { list ->
+            list.map { if (it.id == id) it.copy(isUnread = false) else it }
+        }
     }
 
     override suspend fun toggleReminder(id: String) {

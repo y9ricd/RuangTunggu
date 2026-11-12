@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -86,6 +87,7 @@ fun RegisterScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(RTColors.ScreenBackground)
+            .imePadding()
             .navigationBarsPadding()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -236,6 +238,8 @@ fun RegisterScreenContent(
                     )
                     .padding(vertical = 6.dp, horizontal = 12.dp)
             )
+
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }

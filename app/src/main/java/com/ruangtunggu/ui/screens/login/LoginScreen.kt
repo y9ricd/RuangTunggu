@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -88,6 +89,7 @@ fun LoginScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(RTColors.ScreenBackground)
+            .imePadding()
             .navigationBarsPadding()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -263,6 +265,8 @@ fun LoginScreenContent(
                 color = RTColors.MutedSlate,
                 textAlign = TextAlign.Center
             )
+
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }

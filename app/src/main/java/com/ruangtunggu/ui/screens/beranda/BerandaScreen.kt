@@ -1924,7 +1924,7 @@ private fun ProfilSayaTab(
             .verticalScroll(rememberScrollState())
     ) {
         RTCurvedHeader(
-            height = 256.dp,
+            height = 296.dp,
             bottomCornerRadius = 32.dp
         ) {
             Column(
@@ -2014,9 +2014,9 @@ private fun ProfilSayaTab(
                 HorizontalDivider(color = RTColors.InputBorder)
                 ProfileDetailRow(Icons.Outlined.CalendarToday, "Tanggal lahir", profile.birthPlaceDate)
                 HorizontalDivider(color = RTColors.InputBorder)
-                ProfileDetailRow(Icons.Outlined.PersonOutline, "Jenis kelamin", profile.gender)
+                ProfileDetailRow(Icons.Outlined.PersonOutline, "Jenis kelamin", if (profile.gender.isBlank() || profile.gender == "-") "-" else profile.gender)
                 HorizontalDivider(color = RTColors.InputBorder)
-                ProfileDetailRow(Icons.Outlined.PhoneAndroid, "No. HP", profile.phone)
+                ProfileDetailRow(Icons.Outlined.PhoneAndroid, "No. HP", if (profile.phone.isBlank() || profile.phone == "-") "-" else profile.phone)
                 HorizontalDivider(color = RTColors.InputBorder)
                 ProfileDetailRow(Icons.Outlined.Email, "Email", profile.email)
             }

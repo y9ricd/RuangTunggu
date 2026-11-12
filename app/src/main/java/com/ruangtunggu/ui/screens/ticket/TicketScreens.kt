@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -322,12 +323,22 @@ fun DatangKeLoketScreen(
                         onClick = onBackClick,
                         shape = RoundedCornerShape(14.dp),
                         border = androidx.compose.foundation.BorderStroke(1.2.dp, RTColors.BrandPrimaryTeal),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = RTColors.BrandPrimaryTeal),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = RTColors.PureWhite,
+                            contentColor = RTColors.BrandPrimaryTeal
+                        ),
                         modifier = Modifier
                             .weight(1f)
                             .height(50.dp)
                     ) {
-                        Text("Petunjuk arah", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Kembali ke Beranda",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = RTColors.BrandPrimaryTeal,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
                     }
 
                     Box(modifier = Modifier.weight(1f)) {

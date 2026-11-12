@@ -76,5 +76,6 @@ interface QueueRepository {
     suspend fun addSystemAndInAppNotification(title: String, body: String, category: String = "INFO")
     suspend fun sendChatMessage(text: String)
     suspend fun markAllNotificationsRead()
+    suspend fun markNotificationAsRead(id: String)
     suspend fun toggleReminder(id: String)
 }

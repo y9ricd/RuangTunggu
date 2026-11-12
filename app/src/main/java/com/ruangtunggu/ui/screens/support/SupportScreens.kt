@@ -44,6 +44,7 @@ import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.VerifiedUser
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -107,7 +108,8 @@ data class SupportUiState(
     val profile: PatientProfile = PatientProfile(),
     val selectedNotifFilter: String = "Semua",
     val generatedOtpCode: String? = null,
-    val isPasswordResetDone: Boolean = false
+    val isPasswordResetDone: Boolean = false,
+    val selectedNotificationDetail: NotificationItem? = null
 )
 
 @HiltViewModel
@@ -161,6 +163,17 @@ class SupportViewModel @Inject constructor(
         viewModelScope.launch {
             queueRepository.markAllNotificationsRead()
         }
+    }
+
+    fun selectNotification(item: NotificationItem) {
+        _uiState.update { it.copy(selectedNotificationDetail = item) }
+        viewModelScope.launch {
+            queueRepository.markNotificationAsRead(item.id)
+        }
+    }
+
+    fun dismissNotificationDetail() {
+        _uiState.update { it.copy(selectedNotificationDetail = null) }
     }
 
     fun toggleReminder(id: String) {
@@ -943,7 +956,7 @@ fun NotifikasiScreen(
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .springClickable { viewModel.markAllNotificationsRead() },
+                            .springClickable { viewModel.selectNotification(item) },
                         shape = RoundedCornerShape(18.dp),
                         color = RTColors.PureWhite,
                         shadowElevation = 3.dp
@@ -1020,7 +1033,94 @@ fun NotifikasiScreen(
                 }
             }
         }
+
+        uiState.selectedNotificationDetail?.let { detailItem ->
+            NotificationDetailDialog(
+                item = detailItem,
+                onDismiss = { viewModel.dismissNotificationDetail() }
+            )
+        }
     }
+}
+
+@Suppress("FunctionName")
+@Composable
+fun NotificationDetailDialog(
+    item: NotificationItem,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(24.dp),
+        containerColor = RTColors.PureWhite,
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(RTColors.QuickActionUniformBg),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = if (item.title.contains("dijeda")) {
+                            Icons.Default.Pause
+                        } else if (item.category == "ANTREAN") {
+                            Icons.Default.Notifications
+                        } else {
+                            Icons.Outlined.FavoriteBorder
+                        },
+                        contentDescription = null,
+                        tint = RTColors.BrandPrimaryTeal,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = item.title,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RTColors.NavyHeading
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "${item.category} · ${item.timeAgo}",
+                        fontSize = 11.5.sp,
+                        color = RTColors.MutedSlate
+                    )
+                }
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text(
+                    text = item.body,
+                    fontSize = 13.5.sp,
+                    lineHeight = 20.sp,
+                    color = RTColors.SlateBodyText
+                )
+            }
+        },
+        confirmButton = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                RTPrimaryButton(
+                    text = "Mengerti",
+                    onClick = onDismiss
+                )
+            }
+        }
+    )
 }
 
 @Suppress("FunctionName")
@@ -1460,8 +1560,8 @@ fun UbahProfilScreen(
     var fullName by remember(uiState.profile.fullName) { mutableStateOf(uiState.profile.fullName) }
     var nik by remember(uiState.profile.nik) { mutableStateOf(uiState.profile.nik) }
     var birthDate by remember(uiState.profile.birthPlaceDate) { mutableStateOf(uiState.profile.birthPlaceDate) }
-    var gender by remember(uiState.profile.gender) { mutableStateOf(uiState.profile.gender) }
-    var phone by remember(uiState.profile.phone) { mutableStateOf(uiState.profile.phone) }
+    var gender by remember(uiState.profile.gender) { mutableStateOf(if (uiState.profile.gender == "-") "" else uiState.profile.gender) }
+    var phone by remember(uiState.profile.phone) { mutableStateOf(if (uiState.profile.phone == "-") "" else uiState.profile.phone) }
 
     Column(
         modifier = Modifier
