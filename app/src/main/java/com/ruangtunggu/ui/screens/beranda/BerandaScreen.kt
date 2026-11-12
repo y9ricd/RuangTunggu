@@ -37,6 +37,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.outlined.Assignment
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -46,7 +47,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.QrCode2
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.AddBox
-import androidx.compose.material.icons.outlined.Assignment
 import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
@@ -103,6 +103,7 @@ import com.ruangtunggu.domain.model.PatientProfile
 import com.ruangtunggu.domain.model.QueueHistoryItem
 import com.ruangtunggu.domain.model.QueuePhase
 import com.ruangtunggu.domain.model.QueueStatus
+import kotlin.time.Duration.Companion.milliseconds
 import com.ruangtunggu.ui.components.BatalkanAntreanBottomSheet
 import com.ruangtunggu.ui.components.HomeTab
 import com.ruangtunggu.ui.components.RTBerandaEmptyQueueCard
@@ -929,7 +930,7 @@ private fun PantauAntreanTab(
 
     LaunchedEffect(autoSimulateEnabled, queue?.remainingQueues, queue?.phase) {
         if (autoSimulateEnabled && queue != null && queue.phase != QueuePhase.DIJEDA) {
-            delay(3500)
+            delay(3500.milliseconds)
             if (queue.remainingQueues > 0) {
                 onRefreshClick()
             } else {
@@ -996,7 +997,7 @@ private fun PantauAntreanTab(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Assignment,
+                            imageVector = Icons.AutoMirrored.Outlined.Assignment,
                             contentDescription = "Belum ada antrean aktif",
                             tint = RTColors.BrandPrimaryTeal,
                             modifier = Modifier.size(54.dp)
@@ -2014,9 +2015,9 @@ private fun ProfilSayaTab(
                 HorizontalDivider(color = RTColors.InputBorder)
                 ProfileDetailRow(Icons.Outlined.CalendarToday, "Tanggal lahir", profile.birthPlaceDate)
                 HorizontalDivider(color = RTColors.InputBorder)
-                ProfileDetailRow(Icons.Outlined.PersonOutline, "Jenis kelamin", if (profile.gender.isBlank() || profile.gender == "-") "-" else profile.gender)
+                ProfileDetailRow(Icons.Outlined.PersonOutline, "Jenis kelamin", profile.gender)
                 HorizontalDivider(color = RTColors.InputBorder)
-                ProfileDetailRow(Icons.Outlined.PhoneAndroid, "No. HP", if (profile.phone.isBlank() || profile.phone == "-") "-" else profile.phone)
+                ProfileDetailRow(Icons.Outlined.PhoneAndroid, "No. HP", profile.phone)
                 HorizontalDivider(color = RTColors.InputBorder)
                 ProfileDetailRow(Icons.Outlined.Email, "Email", profile.email)
             }
@@ -2035,7 +2036,7 @@ private fun ProfilSayaTab(
                 HorizontalDivider(color = RTColors.InputBorder)
                 ProfileMenuActionRow(Icons.Outlined.ChatBubbleOutline, "Bantuan & chat petugas", null, onChatPetugasClick)
                 HorizontalDivider(color = RTColors.InputBorder)
-                ProfileMenuActionRow(Icons.Outlined.Info, "Tentang aplikasi", "v1.0.0", {})
+                ProfileMenuActionRow(Icons.Outlined.Info, "Tentang aplikasi", "v1.0.0") {}
             }
 
             Spacer(modifier = Modifier.height(18.dp))

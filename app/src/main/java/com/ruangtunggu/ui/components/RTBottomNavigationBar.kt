@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Assignment
+import androidx.compose.material.icons.automirrored.outlined.Assignment
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Schedule
@@ -41,7 +41,7 @@ enum class HomeTab(
     val icon: ImageVector
 ) {
     BERANDA("Beranda", Icons.Outlined.Home),
-    ANTREAN("Antrean", Icons.Outlined.Assignment),
+    ANTREAN("Antrean", Icons.AutoMirrored.Outlined.Assignment),
     RIWAYAT("Riwayat", Icons.Outlined.Schedule),
     PROFIL("Profil", Icons.Outlined.PersonOutline)
 }

@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Assignment
 import androidx.compose.material.icons.filled.PriorityHigh
-import androidx.compose.material.icons.outlined.Assignment
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -108,7 +108,7 @@ fun BatalkanAntreanBottomSheet(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Assignment,
+                        imageVector = Icons.AutoMirrored.Outlined.Assignment,
                         contentDescription = null,
                         tint = RTColors.BrandPrimaryTeal,
                         modifier = Modifier.size(22.dp)
