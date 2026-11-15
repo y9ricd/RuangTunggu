@@ -1,5 +1,9 @@
 package com.ruangtunggu.ui.screens.splash
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,10 +18,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,6 +77,24 @@ fun SplashScreenContent(
     onMulaiClick: () -> Unit,
     onMasukClick: () -> Unit
 ) {
+    var hasAnimated by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        hasAnimated = true
+    }
+    val logoScale by animateFloatAsState(
+        targetValue = if (hasAnimated) 1f else 0.88f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "LogoScale"
+    )
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (hasAnimated) 1f else 0f,
+        animationSpec = tween(500),
+        label = "ContentAlpha"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -88,6 +115,9 @@ fun SplashScreenContent(
                 verticalArrangement = Arrangement.Center
             ) {
                 RuangTungguLogoCard(
+                    modifier = Modifier
+                        .scale(logoScale)
+                        .alpha(contentAlpha),
                     cardSize = 92.dp,
                     cornerRadius = 24.dp,
                     showOuterHalo = true

@@ -83,7 +83,7 @@ fun PilihPoliScreen(
                     val selected = uiState.selectedPoli
                     RTPrimaryButton(
                         text = if (selected != null) {
-                            "Pilih ${selected.name} →"
+                            "Pilih ${selected.name}"
                         } else {
                             "Pilih poli terlebih dahulu"
                         },
@@ -137,6 +137,7 @@ fun PilihPoliScreen(
                     .padding(horizontal = 20.dp)
             ) {
                 RTFloatingCard(
+                    modifier = Modifier.springClickable(onClick = onBackClick),
                     cornerRadius = 20.dp,
                     contentPadding = PaddingValues(14.dp)
                 ) {

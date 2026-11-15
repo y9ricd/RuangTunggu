@@ -44,6 +44,9 @@ proguard/
 .externalNativeBuild
 .cxx/
 
+# VS Code / Antigravity IDE
+.vscode/
+
 # OS-specific files
 .DS_Store
 .DS_Store?

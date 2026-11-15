@@ -78,6 +78,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.qrcode.QRCodeWriter
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -1095,35 +1098,71 @@ fun RTQrCodeCanvas(
     modifier: Modifier = Modifier,
     gridSize: Int = 15
 ) {
+    val bitMatrix = remember(qrPayload) {
+        runCatching {
+            val hints = mapOf(
+                EncodeHintType.MARGIN to 0,
+                EncodeHintType.CHARACTER_SET to "UTF-8"
+            )
+            QRCodeWriter().encode(
+                qrPayload,
+                BarcodeFormat.QR_CODE,
+                21,
+                21,
+                hints
+            )
+        }.getOrNull()
+    }
+
     Canvas(modifier = modifier) {
-        val cellSize = size.width / gridSize
-        val seed = qrPayload.hashCode()
+        if (bitMatrix != null) {
+            val cols = bitMatrix.width
+            val rows = bitMatrix.height
+            val cellW = size.width / cols
+            val cellH = size.height / rows
 
-        for (row in 0 until gridSize) {
-            for (col in 0 until gridSize) {
-                val isFinderTopLeft = row in 0..3 && col in 0..3
-                val isFinderTopRight = row in 0..3 && col in (gridSize - 4) until gridSize
-                val isFinderBottomLeft = row in (gridSize - 4) until gridSize && col in 0..3
-
-                val shouldFill = when {
-                    isFinderTopLeft || isFinderTopRight || isFinderBottomLeft -> {
-                        val localR = if (row >= gridSize - 4) row - (gridSize - 4) else row
-                        val localC = if (col >= gridSize - 4) col - (gridSize - 4) else col
-                        localR == 0 || localR == 3 || localC == 0 || localC == 3 || (localR in 1..2 && localC in 1..2)
-                    }
-                    else -> {
-                        val hash = ((row * 31 + col * 17) xor seed) and 0xFF
-                        hash % 3 != 0
+            for (row in 0 until rows) {
+                for (col in 0 until cols) {
+                    if (bitMatrix.get(col, row)) {
+                        drawRoundRect(
+                            color = RTColors.NavyHeading,
+                            topLeft = Offset(col * cellW + 0.5f, row * cellH + 0.5f),
+                            size = Size(cellW - 1f, cellH - 1f),
+                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(2.5f, 2.5f)
+                        )
                     }
                 }
+            }
+        } else {
+            val cellSize = size.width / gridSize
+            val seed = qrPayload.hashCode()
 
-                if (shouldFill) {
-                    drawRoundRect(
-                        color = RTColors.NavyHeading,
-                        topLeft = Offset(col * cellSize + 1f, row * cellSize + 1f),
-                        size = Size(cellSize - 2f, cellSize - 2f),
-                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(3f, 3f)
-                    )
+            for (row in 0 until gridSize) {
+                for (col in 0 until gridSize) {
+                    val isFinderTopLeft = row in 0..3 && col in 0..3
+                    val isFinderTopRight = row in 0..3 && col in (gridSize - 4) until gridSize
+                    val isFinderBottomLeft = row in (gridSize - 4) until gridSize && col in 0..3
+
+                    val shouldFill = when {
+                        isFinderTopLeft || isFinderTopRight || isFinderBottomLeft -> {
+                            val localR = if (row >= gridSize - 4) row - (gridSize - 4) else row
+                            val localC = if (col >= gridSize - 4) col - (gridSize - 4) else col
+                            localR == 0 || localR == 3 || localC == 0 || localC == 3 || (localR in 1..2 && localC in 1..2)
+                        }
+                        else -> {
+                            val hash = ((row * 31 + col * 17) xor seed) and 0xFF
+                            hash % 3 != 0
+                        }
+                    }
+
+                    if (shouldFill) {
+                        drawRoundRect(
+                            color = RTColors.NavyHeading,
+                            topLeft = Offset(col * cellSize + 1f, row * cellSize + 1f),
+                            size = Size(cellSize - 2f, cellSize - 2f),
+                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(3f, 3f)
+                        )
+                    }
                 }
             }
         }

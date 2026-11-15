@@ -23,21 +23,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Penting: Gunakan tanda kutip ter-escape \"...\" untuk tipe String pada buildConfigField
+        buildConfigField("String", "SUPABASE_URL", "\"https://yqfoolhywaxntsmhvqsv.supabase.co\"")
+        // Kunci Resmi Cloudflare Turnstile (Gunakan "1x00000000000000000000AA" untuk testing/selalu
+        // lolos)
+        buildConfigField("String", "CLOUDFLARE_SITE_KEY", "\"0x4AAAAAAFw8TFi2EluS2Wwm\"")
         buildConfigField(
-            "String",
-            "SUPABASE_URL",
-            "\"https://yqfoolhywaxntsmhvqsv.supabase.co\""
-        )
-        // Kunci Resmi Cloudflare Turnstile (Gunakan "1x00000000000000000000AA" untuk testing/selalu lolos)
-        buildConfigField(
-            "String",
-            "CLOUDFLARE_SITE_KEY",
-            "\"0x4AAAAAAFw8TFi2EluS2Wwm\""
-        )
-        buildConfigField(
-            "String",
-            "SUPABASE_ANON_KEY",
-            "\"sb_publishable_Nomw6A4WtjKfLfdq5N4A1w_KAmoz5nL\""
+                "String",
+                "SUPABASE_ANON_KEY",
+                "\"sb_publishable_Nomw6A4WtjKfLfdq5N4A1w_KAmoz5nL\""
         )
     }
 
@@ -45,8 +38,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
             )
         }
     }
@@ -69,11 +62,7 @@ androidComponents {
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-    }
-}
+kotlin { compilerOptions { jvmTarget.set(JvmTarget.JVM_17) } }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -110,4 +99,17 @@ dependencies {
 
     // Image loading
     implementation(libs.coil.compose)
+
+    // Lottie Animation (Airbnb)
+    implementation(libs.lottie.compose)
+
+    // QR Code Engine (Zxing Core)
+    implementation(libs.zxing.core)
+
+    // Glassmorphism Blur (Skydoves Cloudy)
+    implementation(libs.cloudy)
+
+    // In-App HTTP Inspector (Chucker)
+    debugImplementation(libs.chucker.debug)
+    releaseImplementation(libs.chucker.release)
 }

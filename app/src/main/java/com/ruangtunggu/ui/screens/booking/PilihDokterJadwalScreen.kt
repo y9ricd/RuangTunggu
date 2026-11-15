@@ -215,6 +215,7 @@ fun PilihDokterJadwalScreen(
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .springClickable { viewModel.onDoctorCardClicked(doctor) }
                                 .border(
                                     width = if (isDocSelected) 1.8.dp else 1.dp,
                                     color = if (isDocSelected) RTColors.BrandPrimaryTeal else RTColors.PureWhite,

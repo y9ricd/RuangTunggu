@@ -1,5 +1,9 @@
 package com.ruangtunggu.ui.screens.booking
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,13 +38,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.delay
 import com.ruangtunggu.R
 import com.ruangtunggu.ui.components.RTCurvedHeader
 import com.ruangtunggu.ui.components.RTFloatingCard
@@ -464,6 +477,27 @@ fun PendaftaranBerhasilScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val ticket = uiState.bookedQueue
 
+    val haptic = LocalHapticFeedback.current
+    var hasAnimated by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        delay(80)
+        hasAnimated = true
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+    }
+    val checkScale by animateFloatAsState(
+        targetValue = if (hasAnimated) 1f else 0.35f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "CheckBounce"
+    )
+    val checkAlpha by animateFloatAsState(
+        targetValue = if (hasAnimated) 1f else 0f,
+        animationSpec = tween(280),
+        label = "CheckAlpha"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -485,6 +519,8 @@ fun PendaftaranBerhasilScreen(
             ) {
                 Box(
                     modifier = Modifier
+                        .scale(checkScale)
+                        .alpha(checkAlpha)
                         .size(64.dp)
                         .clip(CircleShape)
                         .background(RTColors.PureWhite),

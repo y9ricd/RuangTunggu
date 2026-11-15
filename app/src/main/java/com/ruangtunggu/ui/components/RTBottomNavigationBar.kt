@@ -1,5 +1,10 @@
 package com.ruangtunggu.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -24,10 +29,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -82,6 +89,30 @@ fun RTBottomNavigationBar(
                 val isSelected = tab == selectedTab
                 val interactionSource = remember { MutableInteractionSource() }
 
+                val capsuleBg by animateColorAsState(
+                    targetValue = if (isSelected) RTColors.MintSurfaceActive else Color.Transparent,
+                    animationSpec = tween(220),
+                    label = "TabCapsuleBg"
+                )
+                val iconTint by animateColorAsState(
+                    targetValue = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.SlateBodyText,
+                    animationSpec = tween(220),
+                    label = "TabIconTint"
+                )
+                val textTint by animateColorAsState(
+                    targetValue = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.MutedSlate,
+                    animationSpec = tween(220),
+                    label = "TabTextTint"
+                )
+                val iconScale by animateFloatAsState(
+                    targetValue = if (isSelected) 1.08f else 1.0f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
+                    label = "TabIconScale"
+                )
+
                 Column(
                     modifier = Modifier
                         .tactilePressScale(interactionSource)
@@ -97,16 +128,16 @@ fun RTBottomNavigationBar(
                             .width(64.dp)
                             .height(34.dp)
                             .clip(RoundedCornerShape(17.dp))
-                            .background(
-                                if (isSelected) RTColors.MintSurfaceActive else Color.Transparent
-                            ),
+                            .background(capsuleBg),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = tab.icon,
                             contentDescription = tab.title,
-                            tint = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.SlateBodyText,
-                            modifier = Modifier.size(22.dp)
+                            tint = iconTint,
+                            modifier = Modifier
+                                .size(22.dp)
+                                .scale(iconScale)
                         )
                     }
                     Spacer(modifier = Modifier.height(4.dp))
@@ -114,7 +145,7 @@ fun RTBottomNavigationBar(
                         text = tab.title,
                         fontSize = 11.5.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.MutedSlate
+                        color = textTint
                     )
                 }
             }

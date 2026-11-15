@@ -70,6 +70,31 @@ class PilihDokterJadwalViewModel @Inject constructor(
         loadDoctors(currentPoliShort, index)
     }
 
+    fun onDoctorCardClicked(doctor: DoctorScheduleItem) {
+        val firstOpenSlot = doctor.slots.firstOrNull { !it.isFull }?.time
+        if (firstOpenSlot != null) {
+            _uiState.update {
+                it.copy(
+                    selectedDoctor = doctor,
+                    selectedSlotTime = if (it.selectedDoctor?.id == doctor.id && it.selectedSlotTime != null) {
+                        it.selectedSlotTime
+                    } else {
+                        firstOpenSlot
+                    },
+                    fullSlotAlertDoctorId = null
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    selectedDoctor = doctor,
+                    selectedSlotTime = null,
+                    fullSlotAlertDoctorId = doctor.id
+                )
+            }
+        }
+    }
+
     fun onSlotClicked(doctor: DoctorScheduleItem, slotTime: String, isFull: Boolean) {
         if (isFull) {
             // Trigger Smart Full-Slot Suggestion Banner (#3) instead of a dead-end!
