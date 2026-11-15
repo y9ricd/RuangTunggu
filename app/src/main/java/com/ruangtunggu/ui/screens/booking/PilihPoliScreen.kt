@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -56,6 +57,7 @@ import com.ruangtunggu.ui.components.springClickable
 import com.ruangtunggu.ui.theme.RTColors
 
 @Suppress("FunctionName")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PilihPoliScreen(
     hospitalId: String,
@@ -241,9 +243,9 @@ fun PilihPoliScreen(
                     }
 
                     Surface(
+                        onClick = { viewModel.onPoliSelected(poli) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .springClickable { viewModel.onPoliSelected(poli) }
                             .border(
                                 width = if (isSelected) 1.8.dp else 1.dp,
                                 color = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.PureWhite,

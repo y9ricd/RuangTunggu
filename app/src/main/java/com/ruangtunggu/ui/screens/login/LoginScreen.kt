@@ -1,5 +1,10 @@
 package com.ruangtunggu.ui.screens.login
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,11 +36,13 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +59,8 @@ import com.ruangtunggu.ui.components.RuangTungguLogoCard
 import com.ruangtunggu.ui.components.springClickable
 import com.ruangtunggu.ui.components.tactilePressScale
 import com.ruangtunggu.ui.theme.RTColors
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Suppress("FunctionName")
 @Composable
@@ -85,6 +94,35 @@ fun LoginScreenContent(
     onNavigateToRegister: () -> Unit,
     onForgotPasswordClick: () -> Unit
 ) {
+    // Entrance animations
+    val headerSlide  = remember { Animatable(-50f) }
+    val headerAlpha  = remember { Animatable(0f) }
+    val cardSlide    = remember { Animatable(60f) }
+    val cardAlpha    = remember { Animatable(0f) }
+    val footerAlpha  = remember { Animatable(0f) }
+
+    LaunchedEffect(Unit) {
+        // Header drops in
+        launch { headerSlide.animateTo(0f, tween(380, easing = FastOutSlowInEasing)) }
+        launch { headerAlpha.animateTo(1f, tween(360)) }
+
+        delay(260)
+
+        // Form card slides up
+        launch {
+            cardAlpha.animateTo(1f, tween(360))
+            cardSlide.animateTo(
+                0f,
+                spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMedium)
+            )
+        }
+
+        delay(300)
+
+        // Footer link fades in
+        launch { footerAlpha.animateTo(1f, tween(300)) }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,11 +132,17 @@ fun LoginScreenContent(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header Wave inside single scrollable Column (zero touch interception issues!)
-        RTCurvedHeader(
-            height = 268.dp,
-            bottomCornerRadius = 36.dp
+        // Header Wave — drops in from top
+        Box(
+            modifier = Modifier.graphicsLayer {
+                alpha        = headerAlpha.value
+                translationY = headerSlide.value.dp.toPx()
+            }
         ) {
+            RTCurvedHeader(
+                height = 268.dp,
+                bottomCornerRadius = 36.dp
+            ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,11 +178,16 @@ fun LoginScreenContent(
             }
         }
 
+        // Form card — slides up
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset(y = (-44).dp)
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 20.dp)
+                .graphicsLayer {
+                    alpha        = cardAlpha.value
+                    translationY = cardSlide.value.dp.toPx()
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             RTFloatingCard(
@@ -239,6 +288,7 @@ fun LoginScreenContent(
                 }
             }
 
+            // Footer — fades in last
             Spacer(modifier = Modifier.height(20.dp))
 
             val registerInteraction = remember { MutableInteractionSource() }
@@ -248,6 +298,7 @@ fun LoginScreenContent(
                 fontWeight = FontWeight.Bold,
                 color = RTColors.BrandPrimaryTeal,
                 modifier = Modifier
+                    .graphicsLayer { alpha = footerAlpha.value }
                     .tactilePressScale(registerInteraction)
                     .clickable(
                         interactionSource = registerInteraction,
@@ -263,7 +314,8 @@ fun LoginScreenContent(
                 text = "Dengan masuk, Anda menyetujui Syarat & Ketentuan",
                 fontSize = 11.sp,
                 color = RTColors.MutedSlate,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.graphicsLayer { alpha = footerAlpha.value }
             )
 
             Spacer(modifier = Modifier.height(48.dp))

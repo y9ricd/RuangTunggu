@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -52,6 +53,7 @@ import com.ruangtunggu.ui.components.springClickable
 import com.ruangtunggu.ui.theme.RTColors
 
 @Suppress("FunctionName")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PilihDokterJadwalScreen(
     hospitalName: String,
@@ -213,9 +215,9 @@ fun PilihDokterJadwalScreen(
                             doctor.slots.any { it.isFull }
 
                         Surface(
+                            onClick = { viewModel.onDoctorCardClicked(doctor) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .springClickable { viewModel.onDoctorCardClicked(doctor) }
                                 .border(
                                     width = if (isDocSelected) 1.8.dp else 1.dp,
                                     color = if (isDocSelected) RTColors.BrandPrimaryTeal else RTColors.PureWhite,
