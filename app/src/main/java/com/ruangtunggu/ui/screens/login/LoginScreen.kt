@@ -143,38 +143,39 @@ fun LoginScreenContent(
                 height = 268.dp,
                 bottomCornerRadius = 36.dp
             ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding()
-                    .padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                RuangTungguLogoCard(
-                    cardSize = 68.dp,
-                    cornerRadius = 18.dp,
-                    showOuterHalo = false
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    RuangTungguLogoCard(
+                        cardSize = 68.dp,
+                        cornerRadius = 18.dp,
+                        showOuterHalo = false
+                    )
 
-                Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
 
-                Text(
-                    text = "Selamat datang kembali",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RTColors.PureWhite,
-                    textAlign = TextAlign.Center
-                )
+                    Text(
+                        text = "Selamat datang kembali",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = RTColors.PureWhite,
+                        textAlign = TextAlign.Center
+                    )
 
-                Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
 
-                Text(
-                    text = "Masuk untuk mulai antre tanpa menunggu",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = RTColors.PureWhite.copy(alpha = 0.92f),
-                    textAlign = TextAlign.Center
-                )
+                    Text(
+                        text = "Masuk untuk mulai antre tanpa menunggu",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = RTColors.PureWhite.copy(alpha = 0.92f),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
 

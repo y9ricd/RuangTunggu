@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -37,7 +38,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,6 +69,8 @@ fun RTBottomNavigationBar(
     onTabSelected: (HomeTab) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -93,22 +99,38 @@ fun RTBottomNavigationBar(
                     targetValue = if (isSelected) RTColors.MintSurfaceActive else Color.Transparent,
                     animationSpec = tween(220),
                     label = "TabCapsuleBg"
+                val capsuleScale by animateFloatAsState(
+                    targetValue = if (isSelected) 1f else 0.76f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    ),
+                    label = "TabCapsuleScale"
+                )
+                val capsuleAlpha by animateFloatAsState(
+                    targetValue = if (isSelected) 1f else 0f,
+                    animationSpec = tween(durationMillis = 180),
+                    label = "TabCapsuleAlpha"
                 )
                 val iconTint by animateColorAsState(
                     targetValue = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.SlateBodyText,
                     animationSpec = tween(220),
+                    animationSpec = tween(200),
                     label = "TabIconTint"
                 )
                 val textTint by animateColorAsState(
                     targetValue = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.MutedSlate,
                     animationSpec = tween(220),
+                    animationSpec = tween(200),
                     label = "TabTextTint"
                 )
                 val iconScale by animateFloatAsState(
                     targetValue = if (isSelected) 1.08f else 1.0f,
+                    targetValue = if (isSelected) 1.14f else 1.0f,
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
                         stiffness = Spring.StiffnessLow
+                        stiffness = Spring.StiffnessMediumLow
                     ),
                     label = "TabIconScale"
                 )
@@ -120,6 +142,12 @@ fun RTBottomNavigationBar(
                             interactionSource = interactionSource,
                             indication = null
                         ) { onTabSelected(tab) }
+                        ) {
+                            if (!isSelected) {
+                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onTabSelected(tab)
+                            }
+                        }
                         .padding(vertical = 2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -129,8 +157,24 @@ fun RTBottomNavigationBar(
                             .height(34.dp)
                             .clip(RoundedCornerShape(17.dp))
                             .background(capsuleBg),
+                            .height(34.dp),
                         contentAlignment = Alignment.Center
                     ) {
+                        // Bouncy Mint Capsule (pure mint, scale bounce, zero grey fade artifact!)
+                        if (capsuleAlpha > 0.005f) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .graphicsLayer {
+                                        scaleX = capsuleScale
+                                        scaleY = capsuleScale
+                                        alpha = capsuleAlpha
+                                    }
+                                    .clip(RoundedCornerShape(17.dp))
+                                    .background(RTColors.MintSurfaceActive)
+                            )
+                        }
+
                         Icon(
                             imageVector = tab.icon,
                             contentDescription = tab.title,

@@ -2,7 +2,15 @@ package com.ruangtunggu.ui.screens.beranda
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -75,6 +83,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -172,57 +181,68 @@ fun BerandaScreen(
                 .fillMaxSize()
                 .padding(bottom = innerPadding.calculateBottomPadding())
         ) {
-            when (uiState.selectedTab) {
-                HomeTab.BERANDA -> BerandaDashboardTab(
-                    uiState = uiState,
-                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
-                    onPoliChipSelected = viewModel::onPoliChipSelected,
-                    onDaftarAntreanClick = { onNavigateToCariRs(uiState.selectedPoliChip) },
-                    onPantauClick = { viewModel.onTabSelected(HomeTab.ANTREAN) },
-                    onProfileHeaderClick = { viewModel.onTabSelected(HomeTab.PROFIL) },
-                    onShowQrTicketClick = onNavigateToTiketQr,
-                    onAturPengingatClick = onNavigateToAturPengingat,
-                    onChatPetugasClick = onNavigateToChatPetugas,
-                    onNotifikasiClick = onNavigateToNotifikasi,
-                    onBeriPenilaianClick = onNavigateToBeriPenilaian,
-                    onDismissReviewClick = viewModel::onDismissReviewCard,
-                    onHospitalCardClick = onNavigateToPilihPoli,
-                    onQuickActionTab = viewModel::onTabSelected,
-                    onSetQueuePhase = viewModel::onSetQueuePhase,
-                    onCompleteQueueForReview = viewModel::onCompleteQueueForReview,
-                    onOpenCancelSheet = viewModel::onOpenCancelSheet
-                )
-                HomeTab.ANTREAN -> PantauAntreanTab(
-                    queue = uiState.activeQueue,
-                    onBackClick = { viewModel.onTabSelected(HomeTab.BERANDA) },
-                    onDaftarAntreanBaruClick = { onNavigateToCariRs("Semua") },
-                    onRefreshClick = viewModel::onSimulateNextQueueStep,
-                    onSetQueuePhase = viewModel::onSetQueuePhase,
-                    onCompleteQueueClick = viewModel::onCompleteQueueForReview,
-                    onShowQrTicketClick = onNavigateToTiketQr,
-                    onDatangKeLoketClick = onNavigateToDatangKeLoket,
-                    onChatPetugasClick = onNavigateToChatPetugas,
-                    onRescheduleClick = onNavigateToReschedule,
-                    onCancelQueueClick = viewModel::onOpenCancelSheet
-                )
-                HomeTab.RIWAYAT -> RiwayatAntreanTab(
-                    historyList = uiState.queueHistory,
-                    selectedFilter = uiState.selectedHistoryFilter,
-                    onBackClick = { viewModel.onTabSelected(HomeTab.BERANDA) },
-                    onFilterSelected = viewModel::onHistoryFilterSelected,
-                    onPantauClick = { viewModel.onTabSelected(HomeTab.ANTREAN) },
-                    onCancelClick = viewModel::onOpenCancelSheet,
-                    onDaftarBaruClick = { onNavigateToCariRs("Semua") }
-                )
-                HomeTab.PROFIL -> ProfilSayaTab(
-                    profile = uiState.patientProfile,
-                    onBackClick = { viewModel.onTabSelected(HomeTab.BERANDA) },
-                    onUbahProfilClick = onNavigateToUbahProfil,
-                    onNotifikasiClick = onNavigateToNotifikasi,
-                    onPengingatClick = onNavigateToAturPengingat,
-                    onChatPetugasClick = onNavigateToChatPetugas,
-                    onLogoutClick = { viewModel.onLogout(onLogoutClick) }
-                )
+            AnimatedContent(
+                targetState = uiState.selectedTab,
+                transitionSpec = {
+                    (fadeIn(animationSpec = tween(180, easing = FastOutSlowInEasing))
+                        togetherWith ExitTransition.None).apply {
+                        targetContentZIndex = 1f
+                    }
+                },
+                label = "HomeTabTransition"
+            ) { targetTab ->
+                when (targetTab) {
+                    HomeTab.BERANDA -> BerandaDashboardTab(
+                        uiState = uiState,
+                        onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                        onPoliChipSelected = viewModel::onPoliChipSelected,
+                        onDaftarAntreanClick = { onNavigateToCariRs(uiState.selectedPoliChip) },
+                        onPantauClick = { viewModel.onTabSelected(HomeTab.ANTREAN) },
+                        onProfileHeaderClick = { viewModel.onTabSelected(HomeTab.PROFIL) },
+                        onShowQrTicketClick = onNavigateToTiketQr,
+                        onAturPengingatClick = onNavigateToAturPengingat,
+                        onChatPetugasClick = onNavigateToChatPetugas,
+                        onNotifikasiClick = onNavigateToNotifikasi,
+                        onBeriPenilaianClick = onNavigateToBeriPenilaian,
+                        onDismissReviewClick = viewModel::onDismissReviewCard,
+                        onHospitalCardClick = onNavigateToPilihPoli,
+                        onQuickActionTab = viewModel::onTabSelected,
+                        onSetQueuePhase = viewModel::onSetQueuePhase,
+                        onCompleteQueueForReview = viewModel::onCompleteQueueForReview,
+                        onOpenCancelSheet = viewModel::onOpenCancelSheet
+                    )
+                    HomeTab.ANTREAN -> PantauAntreanTab(
+                        queue = uiState.activeQueue,
+                        onBackClick = { viewModel.onTabSelected(HomeTab.BERANDA) },
+                        onDaftarAntreanBaruClick = { onNavigateToCariRs("Semua") },
+                        onRefreshClick = viewModel::onSimulateNextQueueStep,
+                        onSetQueuePhase = viewModel::onSetQueuePhase,
+                        onCompleteQueueClick = viewModel::onCompleteQueueForReview,
+                        onShowQrTicketClick = onNavigateToTiketQr,
+                        onDatangKeLoketClick = onNavigateToDatangKeLoket,
+                        onChatPetugasClick = onNavigateToChatPetugas,
+                        onRescheduleClick = onNavigateToReschedule,
+                        onCancelQueueClick = viewModel::onOpenCancelSheet
+                    )
+                    HomeTab.RIWAYAT -> RiwayatAntreanTab(
+                        historyList = uiState.queueHistory,
+                        selectedFilter = uiState.selectedHistoryFilter,
+                        onBackClick = { viewModel.onTabSelected(HomeTab.BERANDA) },
+                        onFilterSelected = viewModel::onHistoryFilterSelected,
+                        onPantauClick = { viewModel.onTabSelected(HomeTab.ANTREAN) },
+                        onCancelClick = viewModel::onOpenCancelSheet,
+                        onDaftarBaruClick = { onNavigateToCariRs("Semua") }
+                    )
+                    HomeTab.PROFIL -> ProfilSayaTab(
+                        profile = uiState.patientProfile,
+                        onBackClick = { viewModel.onTabSelected(HomeTab.BERANDA) },
+                        onUbahProfilClick = onNavigateToUbahProfil,
+                        onNotifikasiClick = onNavigateToNotifikasi,
+                        onPengingatClick = onNavigateToAturPengingat,
+                        onChatPetugasClick = onNavigateToChatPetugas,
+                        onLogoutClick = { viewModel.onLogout(onLogoutClick) }
+                    )
+                }
             }
         }
     }
@@ -1039,6 +1059,17 @@ private fun PantauAntreanTab(
     val isPaused = queue.phase == QueuePhase.DIJEDA
     val ringColor = if (isPaused) RTColors.WarningAmberBorder else RTColors.BrandPrimaryTeal
 
+    val infiniteTransition = rememberInfiniteTransition(label = "PantauRingRotation")
+    val ringRotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3600, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "QueueRingAngle"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -1214,7 +1245,11 @@ private fun PantauAntreanTab(
                             .springClickable(onClick = onRefreshClick),
                         contentAlignment = Alignment.Center
                     ) {
-                        Canvas(modifier = Modifier.fillMaxSize()) {
+                        Canvas(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .rotate(if (isPaused) 0f else ringRotation)
+                        ) {
                             val stroke = 11.dp.toPx()
                             drawCircle(
                                 color = if (isPaused) RTColors.WarningAmberBg else RTColors.InputBorder,
