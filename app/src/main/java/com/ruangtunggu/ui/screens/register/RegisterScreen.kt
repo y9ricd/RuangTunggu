@@ -1,8 +1,11 @@
 package com.ruangtunggu.ui.screens.register
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Badge
@@ -24,12 +28,14 @@ import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -38,10 +44,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ruangtunggu.ui.components.CloudflareTurnstileCaptcha
 import com.ruangtunggu.ui.components.RTCurvedHeader
+import com.ruangtunggu.ui.components.RTDatePickerField
 import com.ruangtunggu.ui.components.RTFloatingCard
 import com.ruangtunggu.ui.components.RTHeaderBackButton
 import com.ruangtunggu.ui.components.RTPrimaryButton
 import com.ruangtunggu.ui.components.RTTextField
+import com.ruangtunggu.ui.components.springClickable
 import com.ruangtunggu.ui.components.tactilePressScale
 import com.ruangtunggu.ui.theme.RTColors
 
@@ -61,7 +69,9 @@ fun RegisterScreen(
         onFullNameChanged = viewModel::onFullNameChanged,
         onEmailOrPhoneChanged = viewModel::onEmailOrPhoneChanged,
         onNikChanged = viewModel::onNikChanged,
-        onBirthPlaceDateChanged = viewModel::onBirthPlaceDateChanged,
+        onBirthPlaceChanged = viewModel::onBirthPlaceChanged,
+        onBirthDateSelected = viewModel::onBirthDateSelected,
+        onGenderChanged = viewModel::onGenderChanged,
         onPasswordChanged = viewModel::onPasswordChanged,
         onCaptchaChanged = viewModel::onCaptchaChanged,
         onDaftarClick = { viewModel.submitRegistration(onRegisterSuccess) },
@@ -77,7 +87,9 @@ fun RegisterScreenContent(
     onFullNameChanged: (String) -> Unit,
     onEmailOrPhoneChanged: (String) -> Unit,
     onNikChanged: (String) -> Unit,
-    onBirthPlaceDateChanged: (String) -> Unit,
+    onBirthPlaceChanged: (String) -> Unit,
+    onBirthDateSelected: (String) -> Unit,
+    onGenderChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onCaptchaChanged: (Boolean) -> Unit,
     onDaftarClick: () -> Unit,
@@ -174,13 +186,62 @@ fun RegisterScreenContent(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 RTTextField(
-                    label = "Tempat, tanggal lahir",
-                    value = uiState.birthPlaceDate,
-                    onValueChange = onBirthPlaceDateChanged,
-                    placeholder = "Kota, DD/MM/YYYY",
-                    leadingIcon = Icons.Outlined.CalendarToday,
-                    isValidCheck = uiState.birthPlaceDate.length >= 6
+                    label = "Tempat lahir",
+                    value = uiState.birthPlace,
+                    onValueChange = onBirthPlaceChanged,
+                    placeholder = "Kota kelahiran (cth. Sidoarjo)",
+                    leadingIcon = Icons.Outlined.Place,
+                    isValidCheck = uiState.birthPlace.trim().isNotEmpty()
                 )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                RTDatePickerField(
+                    label = "Tanggal lahir",
+                    value = uiState.birthDate,
+                    onDateSelected = onBirthDateSelected,
+                    placeholder = "Pilih tanggal lahir",
+                    isValidCheck = uiState.birthDate.isNotEmpty()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Jenis kelamin",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = RTColors.NavyHeading
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    listOf("Laki-laki", "Perempuan").forEach { option ->
+                        val active = uiState.gender == option
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(46.dp)
+                                .springClickable { onGenderChanged(option) }
+                                .clip(RoundedCornerShape(13.dp))
+                                .background(if (active) RTColors.QuickActionUniformBg else RTColors.InputBackground)
+                                .border(
+                                    1.2.dp,
+                                    if (active) RTColors.BrandPrimaryTeal else RTColors.InputBorder,
+                                    RoundedCornerShape(13.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = if (active) "● $option" else "○ $option",
+                                fontSize = 13.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (active) RTColors.BrandPrimaryTeal else RTColors.SlateBodyText
+                            )
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 

@@ -15,12 +15,17 @@ data class RegisterUiState(
     val fullName: String = "",
     val emailOrPhone: String = "",
     val nik: String = "",
-    val birthPlaceDate: String = "",
+    val birthPlace: String = "",
+    val birthDate: String = "",
+    val gender: String = "Laki-laki",
     val password: String = "",
     val captchaChecked: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
-)
+) {
+    val birthPlaceDate: String
+        get() = if (birthPlace.isNotBlank()) "${birthPlace.trim()}, ${birthDate.trim()}" else birthDate.trim()
+}
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
@@ -43,8 +48,20 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(nik = numeric16, errorMessage = null) }
     }
 
+    fun onBirthPlaceChanged(value: String) {
+        _uiState.update { it.copy(birthPlace = value, errorMessage = null) }
+    }
+
+    fun onBirthDateSelected(value: String) {
+        _uiState.update { it.copy(birthDate = value, errorMessage = null) }
+    }
+
     fun onBirthPlaceDateChanged(value: String) {
-        _uiState.update { it.copy(birthPlaceDate = value, errorMessage = null) }
+        _uiState.update { it.copy(birthDate = value, errorMessage = null) }
+    }
+
+    fun onGenderChanged(value: String) {
+        _uiState.update { it.copy(gender = value, errorMessage = null) }
     }
 
     fun onPasswordChanged(value: String) {
@@ -64,6 +81,7 @@ class RegisterViewModel @Inject constructor(
                 emailOrPhone = s.emailOrPhone,
                 nik = s.nik,
                 birthPlaceDate = s.birthPlaceDate,
+                gender = s.gender,
                 password = s.password,
                 captchaChecked = s.captchaChecked
             )

@@ -34,6 +34,7 @@ class RegisterUseCase @Inject constructor(
         emailOrPhone: String,
         nik: String,
         birthPlaceDate: String,
+        gender: String = "Laki-laki",
         password: String,
         captchaChecked: Boolean
     ): Result<PatientProfile> {
@@ -56,6 +57,7 @@ class RegisterUseCase @Inject constructor(
             emailOrPhone = emailOrPhone.trim(),
             nik = nik,
             birthPlaceDate = birthPlaceDate.trim(),
+            gender = gender.trim(),
             password = password
         )
     }

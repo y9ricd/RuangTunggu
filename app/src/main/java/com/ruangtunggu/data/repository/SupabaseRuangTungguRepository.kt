@@ -22,15 +22,86 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Singleton
+
+@Serializable
+private data class RumahSakitSupabaseDto(
+    val id: String,
+    val name: String,
+    val address: String? = null,
+    val rating: Double? = null,
+    @SerialName("open_hours") val openHours: String? = null,
+    @SerialName("drawable_res_name") val drawableResName: String? = null
+)
+
+@Serializable
+private data class PoliSupabaseDto(
+    val id: String,
+    val name: String,
+    @SerialName("short_name") val shortName: String,
+    @SerialName("doctor_count_display") val doctorCountDisplay: Int? = null,
+    @SerialName("start_hour") val startHour: String? = null,
+    @SerialName("avg_consult_minutes") val avgConsultMinutes: Int? = null
+)
+
+@Serializable
+private data class RumahSakitPoliSupabaseDto(
+    @SerialName("hospital_id") val hospitalId: String,
+    @SerialName("poli_short_name") val poliShortName: String
+)
+
+@Serializable
+private data class DokterSupabaseDto(
+    val id: String,
+    val name: String,
+    val initials: String? = null,
+    val specialty: String? = null,
+    @SerialName("poli_short_name") val poliShortName: String? = null,
+    val rating: Double? = null,
+    @SerialName("experience_years") val experienceYears: Int? = null,
+    @SerialName("hospital_id") val hospitalId: String? = null
+)
+
+@Serializable
+private data class NotifikasiDemoDto(
+    val id: String,
+    val title: String? = null,
+    val body: String? = null,
+    @SerialName("time_ago") val timeAgo: String? = null,
+    val category: String? = null,
+    @SerialName("is_unread") val isUnread: Boolean? = null,
+    @SerialName("day_group") val dayGroup: String? = null
+)
+
+@Serializable
+private data class ChatDemoDto(
+    val id: String,
+    @SerialName("sender_name") val senderName: String? = null,
+    val message: String? = null,
+    val time: String? = null,
+    @SerialName("is_from_user") val isFromUser: Boolean? = null
+)
+
+@Serializable
+private data class PengaturanPengingatDto(
+    val id: String,
+    val title: String? = null,
+    @SerialName("schedule_label") val scheduleLabel: String? = null,
+    @SerialName("is_enabled") val isEnabled: Boolean? = null
+)
 
 @Singleton
 class SupabaseAuthRepositoryImpl @Inject constructor(
@@ -122,6 +193,7 @@ class SupabaseAuthRepositoryImpl @Inject constructor(
         emailOrPhone: String,
         nik: String,
         birthPlaceDate: String,
+        gender: String,
         password: String
     ): Result<PatientProfile> {
         return try {
@@ -137,7 +209,7 @@ class SupabaseAuthRepositoryImpl @Inject constructor(
                 initials = computeInitials(fullName.trim()),
                 nik = nik.trim(),
                 birthPlaceDate = birthPlaceDate.trim(),
-                gender = "-",
+                gender = if (gender.isNotBlank() && gender != "-") gender else "Laki-laki",
                 phone = resolvedPhone,
                 email = resolvedEmail,
                 isVerified = true
@@ -328,6 +400,64 @@ class SupabaseQueueRepositoryImpl @Inject constructor(
         )
     )
     override val remindersFlow: StateFlow<List<ReminderToggleItem>> = _remindersFlow.asStateFlow()
+
+    init {
+        loadInitialSupabaseData()
+    }
+
+    private fun loadInitialSupabaseData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching {
+                val notifs = supabaseClient.postgrest.from("notifikasi_demo")
+                    .select()
+                    .decodeList<NotifikasiDemoDto>()
+                if (notifs.isNotEmpty()) {
+                    _notificationsFlow.value = notifs.map {
+                        NotificationItem(
+                            id = it.id,
+                            title = it.title ?: "Info",
+                            body = it.body ?: "",
+                            timeAgo = it.timeAgo ?: "Hari ini",
+                            category = it.category ?: "INFO",
+                            isUnread = it.isUnread ?: false,
+                            dayGroup = it.dayGroup ?: "Hari ini"
+                        )
+                    }
+                }
+            }
+            runCatching {
+                val chats = supabaseClient.postgrest.from("chat_demo")
+                    .select()
+                    .decodeList<ChatDemoDto>()
+                if (chats.isNotEmpty()) {
+                    _chatMessagesFlow.value = chats.map {
+                        ChatMessageItem(
+                            id = it.id,
+                            senderName = it.senderName ?: "Petugas Loket RS",
+                            message = it.message ?: "",
+                            time = it.time ?: "09.46",
+                            isFromUser = it.isFromUser ?: false
+                        )
+                    }
+                }
+            }
+            runCatching {
+                val reminders = supabaseClient.postgrest.from("pengaturan_pengingat")
+                    .select()
+                    .decodeList<PengaturanPengingatDto>()
+                if (reminders.isNotEmpty()) {
+                    _remindersFlow.value = reminders.map {
+                        ReminderToggleItem(
+                            id = it.id,
+                            title = it.title ?: "Pengingat",
+                            scheduleLabel = it.scheduleLabel ?: "Jadwal",
+                            isEnabled = it.isEnabled ?: true
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     private var ticketCounter = 23
 
@@ -714,24 +844,76 @@ class SupabaseQueueRepositoryImpl @Inject constructor(
         notificationHelper.showNotification(title = title, message = body)
     }
 
-    override suspend fun getPopularPoli(): List<String> = listOf(
-        "Umum", "Anak", "Gigi", "Kandungan"
-    )
+    override suspend fun getPopularPoli(): List<String> {
+        val remote = runCatching {
+            supabaseClient.postgrest.from("poli")
+                .select()
+                .decodeList<PoliSupabaseDto>()
+                .take(4)
+                .map { it.shortName }
+        }.getOrNull()
+        if (!remote.isNullOrEmpty()) return remote
+        return listOf("Umum", "Anak", "Gigi", "Kandungan")
+    }
 
-    override suspend fun getAvailablePoliList(): List<PoliItem> = listOf(
-        PoliItem("poli-umum", "Poli Umum", "Umum", 8, "08.00", avgConsultMinutes = 5),
-        PoliItem("poli-anak", "Poli Anak", "Anak", 5, "08.00", avgConsultMinutes = 5),
-        PoliItem("poli-gigi", "Poli Gigi", "Gigi", 3, "09.00", avgConsultMinutes = 7),
-        PoliItem("poli-kandungan", "Poli Kandungan", "Kandungan", 4, "09.00", avgConsultMinutes = 6),
-        PoliItem("poli-mata", "Poli Mata", "Mata", 2, "10.00", avgConsultMinutes = 5),
-        PoliItem("poli-penyakit-dalam", "Poli Penyakit Dalam", "Penyakit Dalam", 6, "08.00", avgConsultMinutes = 6)
-    )
+    override suspend fun getAvailablePoliList(): List<PoliItem> {
+        val remote = runCatching {
+            supabaseClient.postgrest.from("poli")
+                .select()
+                .decodeList<PoliSupabaseDto>()
+                .map { dto ->
+                    PoliItem(
+                        id = dto.id,
+                        name = dto.name,
+                        shortName = dto.shortName,
+                        doctorCount = dto.doctorCountDisplay ?: 5,
+                        startHour = dto.startHour ?: "08.00",
+                        avgConsultMinutes = dto.avgConsultMinutes ?: 5
+                    )
+                }
+        }.getOrNull()
+        if (!remote.isNullOrEmpty()) return remote
+        return listOf(
+            PoliItem("poli-umum", "Poli Umum", "Umum", 8, "08.00", avgConsultMinutes = 5),
+            PoliItem("poli-anak", "Poli Anak", "Anak", 5, "08.00", avgConsultMinutes = 5),
+            PoliItem("poli-gigi", "Poli Gigi", "Gigi", 3, "09.00", avgConsultMinutes = 7),
+            PoliItem("poli-kandungan", "Poli Kandungan", "Kandungan", 4, "09.00", avgConsultMinutes = 6),
+            PoliItem("poli-mata", "Poli Mata", "Mata", 2, "10.00", avgConsultMinutes = 5),
+            PoliItem("poli-penyakit-dalam", "Poli Penyakit Dalam", "Penyakit Dalam", 6, "08.00", avgConsultMinutes = 6)
+        )
+    }
 
     override suspend fun getNearbyHospitals(
         query: String,
         poliFilter: String
     ): List<HospitalItem> {
-        val allHospitals = listOf(
+        val remote = runCatching {
+            val rsList = supabaseClient.postgrest.from("rumah_sakit")
+                .select()
+                .decodeList<RumahSakitSupabaseDto>()
+            val rsPoliMap = runCatching {
+                supabaseClient.postgrest.from("rumah_sakit_poli")
+                    .select()
+                    .decodeList<RumahSakitPoliSupabaseDto>()
+                    .groupBy({ it.hospitalId }, { it.poliShortName })
+            }.getOrDefault(emptyMap())
+
+            rsList.mapIndexed { idx, rs ->
+                val polis = rsPoliMap[rs.id] ?: listOf("Umum", "Anak", "Gigi")
+                HospitalItem(
+                    id = rs.id,
+                    name = rs.name,
+                    address = rs.address ?: "Jl. Sidoarjo",
+                    rating = rs.rating ?: 4.8,
+                    distanceKm = "${1.0 + (idx % 4) * 0.4} km",
+                    openHours = rs.openHours ?: "Buka 24 jam",
+                    availablePoli = polis,
+                    drawableResName = rs.drawableResName ?: "img_rs_sehat_sidoarjo"
+                )
+            }
+        }.getOrNull()
+
+        val allHospitals = if (!remote.isNullOrEmpty()) remote else listOf(
             HospitalItem(
                 id = "rs-sehat-sidoarjo",
                 name = "RS Sehat Sidoarjo",
@@ -787,6 +969,35 @@ class SupabaseQueueRepositoryImpl @Inject constructor(
     ): List<DoctorScheduleItem> {
         val isTomorrowOrLater = dateIndex >= 1
         val cleanPoli = poliShortName.trim()
+
+        val remoteDocs = runCatching {
+            val allDocs = supabaseClient.postgrest.from("dokter")
+                .select()
+                .decodeList<DokterSupabaseDto>()
+            allDocs.filter { it.poliShortName?.equals(cleanPoli, ignoreCase = true) == true }
+        }.getOrNull()
+
+        if (!remoteDocs.isNullOrEmpty()) {
+            return remoteDocs.mapIndexed { idx, doc ->
+                val slot1Full = false
+                val slot2Full = false
+                val slot3Full = !isTomorrowOrLater && (idx % 2 == 0)
+                DoctorScheduleItem(
+                    id = doc.id,
+                    name = doc.name,
+                    initials = doc.initials ?: doc.name.split(" ").filter { it.length > 2 }.map { it.first() }.take(2).joinToString("").uppercase(),
+                    specialty = doc.specialty ?: "Spesialis $cleanPoli",
+                    poliShortName = cleanPoli,
+                    rating = doc.rating ?: (4.7 + ((idx * 3) % 4) * 0.1),
+                    experienceYears = doc.experienceYears ?: (5 + idx),
+                    slots = listOf(
+                        DoctorTimeSlot("08:00", isFull = slot1Full, currentBooked = 14 + idx * 2, maxQuota = 30),
+                        DoctorTimeSlot("09:30", isFull = slot2Full, currentBooked = 11 + idx * 3, maxQuota = 30),
+                        DoctorTimeSlot("13:00", isFull = slot3Full, currentBooked = if (slot3Full) 30 else 8 + idx, maxQuota = 30)
+                    )
+                )
+            }
+        }
 
         val rawDoctors = when {
             cleanPoli.equals("Umum", ignoreCase = true) -> listOf(

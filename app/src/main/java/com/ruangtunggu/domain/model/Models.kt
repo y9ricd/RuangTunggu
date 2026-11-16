@@ -9,10 +9,10 @@ data class PatientProfile(
     @SerialName("full_name") val fullName: String = "Nama Pasien",
     val initials: String = "NP",
     val nik: String = "3515081201950001",
-    @SerialName("birth_place_date") val birthPlaceDate: String = "01 Januari 1995",
-    val gender: String = "-",
-    val phone: String = "-",
-    val email: String = "email@contoh.com",
+    @SerialName("birth_place_date") val birthPlaceDate: String = "Sidoarjo, 01 Januari 1995",
+    val gender: String = "Laki-laki",
+    val phone: String = "081234567890",
+    val email: String = "pasien@ruangtunggu.com",
     @SerialName("is_verified") val isVerified: Boolean = true
 ) {
     val maskedNik: String

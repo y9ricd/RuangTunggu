@@ -95,10 +95,6 @@ fun RTBottomNavigationBar(
                 val isSelected = tab == selectedTab
                 val interactionSource = remember { MutableInteractionSource() }
 
-                val capsuleBg by animateColorAsState(
-                    targetValue = if (isSelected) RTColors.MintSurfaceActive else Color.Transparent,
-                    animationSpec = tween(220),
-                    label = "TabCapsuleBg"
                 val capsuleScale by animateFloatAsState(
                     targetValue = if (isSelected) 1f else 0.76f,
                     animationSpec = spring(
@@ -114,22 +110,18 @@ fun RTBottomNavigationBar(
                 )
                 val iconTint by animateColorAsState(
                     targetValue = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.SlateBodyText,
-                    animationSpec = tween(220),
                     animationSpec = tween(200),
                     label = "TabIconTint"
                 )
                 val textTint by animateColorAsState(
                     targetValue = if (isSelected) RTColors.BrandPrimaryTeal else RTColors.MutedSlate,
-                    animationSpec = tween(220),
                     animationSpec = tween(200),
                     label = "TabTextTint"
                 )
                 val iconScale by animateFloatAsState(
-                    targetValue = if (isSelected) 1.08f else 1.0f,
                     targetValue = if (isSelected) 1.14f else 1.0f,
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
                         stiffness = Spring.StiffnessMediumLow
                     ),
                     label = "TabIconScale"
@@ -137,11 +129,9 @@ fun RTBottomNavigationBar(
 
                 Column(
                     modifier = Modifier
-                        .tactilePressScale(interactionSource)
                         .clickable(
                             interactionSource = interactionSource,
                             indication = null
-                        ) { onTabSelected(tab) }
                         ) {
                             if (!isSelected) {
                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -154,9 +144,6 @@ fun RTBottomNavigationBar(
                     Box(
                         modifier = Modifier
                             .width(64.dp)
-                            .height(34.dp)
-                            .clip(RoundedCornerShape(17.dp))
-                            .background(capsuleBg),
                             .height(34.dp),
                         contentAlignment = Alignment.Center
                     ) {

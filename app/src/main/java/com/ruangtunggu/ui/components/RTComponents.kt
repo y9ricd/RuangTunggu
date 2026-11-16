@@ -49,17 +49,26 @@ import androidx.compose.material.icons.filled.PriorityHigh
 import androidx.compose.material.icons.filled.QrCode2
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -97,6 +106,10 @@ import com.ruangtunggu.domain.model.CompletedConsultation
 import com.ruangtunggu.domain.model.QueuePhase
 import com.ruangtunggu.ui.theme.RTColors
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 /**
  * 3. "Spring Touch Feedback" (Sentuhan Lembut Medis):
@@ -582,6 +595,203 @@ fun RTTextField(
                 }
             }
         )
+    }
+}
+
+/**
+ * Interactive Date Picker Field with Material 3 DatePickerDialog
+ * Displays formatted Indonesian date (e.g. "01 Januari 1995")
+ * Eliminates user input error when typing dates!
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Suppress("FunctionName")
+@Composable
+fun RTDatePickerField(
+    label: String,
+    value: String,
+    onDateSelected: (String) -> Unit,
+    placeholder: String = "Pilih tanggal lahir",
+    modifier: Modifier = Modifier,
+    isValidCheck: Boolean = false
+) {
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    val initialMillis = remember(value) {
+        try {
+            val format = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
+            format.parse(value)?.time ?: Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                set(Calendar.YEAR, 2000)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
+        } catch (_: Exception) {
+            Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                set(Calendar.YEAR, 2000)
+                set(Calendar.MONTH, Calendar.JANUARY)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
+        }
+    }
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialMillis,
+        yearRange = 1940..Calendar.getInstance().get(Calendar.YEAR)
+    )
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                                timeInMillis = millis
+                            }
+                            val outputFormat = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).apply {
+                                timeZone = TimeZone.getTimeZone("UTC")
+                            }
+                            onDateSelected(outputFormat.format(calendar.time))
+                        }
+                        showDatePicker = false
+                    }
+                ) {
+                    Text(
+                        text = "Pilih",
+                        fontWeight = FontWeight.Bold,
+                        color = RTColors.BrandPrimaryTeal
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(
+                        text = "Batal",
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF64748B)
+                    )
+                }
+            },
+            colors = DatePickerDefaults.colors(
+                containerColor = Color.White
+            )
+        ) {
+            CompositionLocalProvider(LocalContentColor provides Color(0xFF0F1E36)) {
+                DatePicker(
+                    state = datePickerState,
+                    title = {
+                        Text(
+                            text = "PILIH TANGGAL LAHIR",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF64748B),
+                            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 4.dp)
+                        )
+                    },
+                    headline = {
+                        val selectedMillis = datePickerState.selectedDateMillis
+                        val formattedDate = if (selectedMillis != null) {
+                            val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply { timeInMillis = selectedMillis }
+                            SimpleDateFormat("EEEE, dd MMMM yyyy", Locale("id", "ID")).apply {
+                                timeZone = TimeZone.getTimeZone("UTC")
+                            }.format(cal.time)
+                        } else {
+                            "Pilih tanggal lahir"
+                        }
+                        Text(
+                            text = formattedDate,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF0F1E36),
+                            modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 12.dp)
+                        )
+                    },
+                    colors = DatePickerDefaults.colors(
+                        containerColor = Color.White,
+                        titleContentColor = Color(0xFF64748B),
+                        headlineContentColor = Color(0xFF0F1E36),
+                        weekdayContentColor = Color(0xFF0F1E36),
+                        subheadContentColor = Color(0xFF0F1E36),
+                        navigationContentColor = Color(0xFF0F1E36),
+                        yearContentColor = Color(0xFF0F1E36),
+                        currentYearContentColor = RTColors.BrandPrimaryTeal,
+                        selectedYearContentColor = Color.White,
+                        selectedYearContainerColor = RTColors.BrandPrimaryTeal,
+                        dayContentColor = Color(0xFF0F1E36),
+                        selectedDayContentColor = Color.White,
+                        selectedDayContainerColor = RTColors.BrandPrimaryTeal,
+                        todayContentColor = RTColors.BrandPrimaryTeal,
+                        todayDateBorderColor = RTColors.BrandPrimaryTeal
+                    )
+                )
+            }
+        }
+    }
+
+    val borderColor = if (isValidCheck) RTColors.BrandPrimaryTeal else RTColors.InputBorder
+    val leadingIconTint = if (isValidCheck) RTColors.BrandPrimaryTeal else RTColors.SlateBodyText
+
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            color = RTColors.NavyHeading,
+            modifier = Modifier.padding(bottom = 6.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .clip(RoundedCornerShape(13.dp))
+                .background(RTColors.InputBackground)
+                .border(1.dp, borderColor, RoundedCornerShape(13.dp))
+                .clickable { showDatePicker = true }
+                .padding(horizontal = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.CalendarToday,
+                contentDescription = label,
+                tint = leadingIconTint,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = value.ifEmpty { placeholder },
+                fontSize = 14.sp,
+                fontWeight = if (value.isNotEmpty()) FontWeight.Medium else FontWeight.Normal,
+                color = if (value.isNotEmpty()) RTColors.NavyHeading else RTColors.MutedSlate,
+                modifier = Modifier.weight(1f)
+            )
+            if (isValidCheck) {
+                Box(
+                    modifier = Modifier
+                        .size(22.dp)
+                        .clip(CircleShape)
+                        .background(RTColors.BrandPrimaryTeal),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Valid",
+                        tint = RTColors.PureWhite,
+                        modifier = Modifier.size(14.dp)
+                    )
+                }
+            }
+        }
     }
 }
 

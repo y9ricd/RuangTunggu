@@ -2048,7 +2048,7 @@ private fun ProfilSayaTab(
             ) {
                 ProfileDetailRow(Icons.Outlined.Badge, "NIK", profile.nik)
                 HorizontalDivider(color = RTColors.InputBorder)
-                ProfileDetailRow(Icons.Outlined.CalendarToday, "Tanggal lahir", profile.birthPlaceDate)
+                ProfileDetailRow(Icons.Outlined.CalendarToday, "Tempat, tanggal lahir", profile.birthPlaceDate)
                 HorizontalDivider(color = RTColors.InputBorder)
                 ProfileDetailRow(Icons.Outlined.PersonOutline, "Jenis kelamin", profile.gender)
                 HorizontalDivider(color = RTColors.InputBorder)

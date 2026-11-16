@@ -21,6 +21,7 @@ interface AuthRepository {
         emailOrPhone: String,
         nik: String,
         birthPlaceDate: String,
+        gender: String = "-",
         password: String
     ): Result<PatientProfile>
     suspend fun requestPasswordResetOtp(nikOrEmail: String): Result<String>

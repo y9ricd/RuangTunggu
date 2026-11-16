@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.NotificationsNone
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.PhoneAndroid
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.AlertDialog
@@ -83,6 +85,7 @@ import com.ruangtunggu.domain.model.ReminderToggleItem
 import com.ruangtunggu.domain.repository.AuthRepository
 import com.ruangtunggu.domain.repository.QueueRepository
 import com.ruangtunggu.ui.components.RTCurvedHeader
+import com.ruangtunggu.ui.components.RTDatePickerField
 import com.ruangtunggu.ui.components.RTEmptyStateView
 import com.ruangtunggu.ui.components.RTFloatingCard
 import com.ruangtunggu.ui.components.RTHeaderBackButton
@@ -1559,7 +1562,15 @@ fun UbahProfilScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var fullName by remember(uiState.profile.fullName) { mutableStateOf(uiState.profile.fullName) }
     var nik by remember(uiState.profile.nik) { mutableStateOf(uiState.profile.nik) }
-    var birthDate by remember(uiState.profile.birthPlaceDate) { mutableStateOf(uiState.profile.birthPlaceDate) }
+    val birthParts = remember(uiState.profile.birthPlaceDate) {
+        uiState.profile.birthPlaceDate.split(",", limit = 2)
+    }
+    var birthPlace by remember(uiState.profile.birthPlaceDate) {
+        mutableStateOf(if (birthParts.size > 1) birthParts[0].trim() else "")
+    }
+    var birthDate by remember(uiState.profile.birthPlaceDate) {
+        mutableStateOf(if (birthParts.size > 1) birthParts[1].trim() else birthParts[0].trim())
+    }
     var gender by remember(uiState.profile.gender) { mutableStateOf(if (uiState.profile.gender == "-") "" else uiState.profile.gender) }
     var phone by remember(uiState.profile.phone) { mutableStateOf(if (uiState.profile.phone == "-") "" else uiState.profile.phone) }
 
@@ -1567,6 +1578,7 @@ fun UbahProfilScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(RTColors.ScreenBackground)
+            .imePadding()
             .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
     ) {
@@ -1622,11 +1634,18 @@ fun UbahProfilScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 RTTextField(
+                    label = "Tempat lahir",
+                    value = birthPlace,
+                    onValueChange = { birthPlace = it },
+                    placeholder = "Kota kelahiran (cth. Sidoarjo)",
+                    leadingIcon = Icons.Outlined.Place
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                RTDatePickerField(
                     label = "Tanggal lahir",
                     value = birthDate,
-                    onValueChange = { birthDate = it },
-                    placeholder = "DD/MM/YYYY",
-                    leadingIcon = Icons.Outlined.CalendarToday
+                    onDateSelected = { birthDate = it },
+                    placeholder = "Pilih tanggal lahir"
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -1680,7 +1699,8 @@ fun UbahProfilScreen(
             RTPrimaryButton(
                 text = "Simpan perubahan",
                 onClick = {
-                    viewModel.saveProfileChanges(fullName, nik, birthDate, gender, phone, onBackClick)
+                    val combinedBirth = if (birthPlace.isNotBlank()) "${birthPlace.trim()}, ${birthDate.trim()}" else birthDate.trim()
+                    viewModel.saveProfileChanges(fullName, nik, combinedBirth, gender, phone, onBackClick)
                 }
             )
         }
@@ -1704,11 +1724,12 @@ fun ForgotPasswordScreen(
     var emailOrNikInput by remember { mutableStateOf("") }
     var otpInput by remember { mutableStateOf("") }
     var newPasswordInput by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
 
-    // Auto-fill OTP convenience when user taps banner
+    // Auto-scroll when OTP is generated so new password field and button are immediately visible
     LaunchedEffect(uiState.generatedOtpCode) {
-        if (uiState.generatedOtpCode != null && otpInput.isEmpty()) {
-            // Keep otpInput ready or let user tap banner to auto-fill
+        if (uiState.generatedOtpCode != null) {
+            scrollState.animateScrollTo(scrollState.maxValue)
         }
     }
 
@@ -1716,8 +1737,9 @@ fun ForgotPasswordScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(RTColors.ScreenBackground)
+            .imePadding()
             .navigationBarsPadding()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
     ) {
         RTCurvedHeader(height = 148.dp, bottomCornerRadius = 28.dp) {
             Row(
@@ -1751,19 +1773,24 @@ fun ForgotPasswordScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(22.dp))
+            val isOtpStep = uiState.generatedOtpCode != null && !uiState.isPasswordResetDone
+            val circleSize = if (isOtpStep) 80.dp else 128.dp
+            val innerCircleSize = if (isOtpStep) 56.dp else 88.dp
+            val iconSize = if (isOtpStep) 28.dp else 42.dp
 
-            // Top Illustration Circle
+            Spacer(modifier = Modifier.height(if (isOtpStep) 10.dp else 20.dp))
+
+            // Top Illustration Circle (compact when typing new password)
             Box(
                 modifier = Modifier
-                    .size(132.dp)
+                    .size(circleSize)
                     .clip(CircleShape)
                     .background(RTColors.QuickActionUniformBg),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
-                        .size(92.dp)
+                        .size(innerCircleSize)
                         .clip(CircleShape)
                         .background(RTColors.MintSurfaceActive),
                     contentAlignment = Alignment.Center
@@ -1776,12 +1803,12 @@ fun ForgotPasswordScreen(
                         },
                         contentDescription = null,
                         tint = RTColors.BrandPrimaryTeal,
-                        modifier = Modifier.size(44.dp)
+                        modifier = Modifier.size(iconSize)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(if (isOtpStep) 12.dp else 18.dp))
 
             if (uiState.isPasswordResetDone) {
                 // Step 3: Password Successfully Changed (Kata sandi berhasil dirubah.png)
@@ -1970,7 +1997,7 @@ fun ForgotPasswordScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(56.dp))
         }
     }
 }
